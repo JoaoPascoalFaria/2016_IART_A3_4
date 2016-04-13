@@ -1,17 +1,35 @@
 package pt.iart.a3_4.util;
 
 import java.util.HashMap;
+import java.util.Set;
 
-public class Edge<T> {
+public class Edge {
 
-	private Vertex<T> v1, v2;
+	private Vertex v1, v2;
 	private HashMap<Transportation, Integer> costs;
 	
-	public Edge(Vertex<T> v1, Vertex<T> v2, int weight) {
+	/**
+	 * 
+	 * @param v1 vertex 1
+	 * @param v2 vertex 2
+	 * @param weight WALK cost from v1 to v2
+	 */
+	public Edge(Vertex v1, Vertex v2, int weight) {
 		costs = new HashMap<Transportation, Integer>();
 		this.v1 = v1;
 		this.v2 = v2;
 		costs.put(Transportation.WALK, weight);
+		
+		v1.addEdge(this);
+		v2.addEdge(this);
+		v1.addNeighbor(v2);
+		v2.addNeighbor(v1);
+	}
+	
+	public Edge(Vertex v1, Vertex v2) {
+		costs = new HashMap<Transportation, Integer>();
+		this.v1 = v1;
+		this.v2 = v2;
 		
 		v1.addEdge(this);
 		v2.addEdge(this);
@@ -29,7 +47,11 @@ public class Edge<T> {
 		return false;
 	}
 	
-	public Vertex<?> otherVertex(Vertex<?> v) {
+	public Set<Transportation> getTransportations(){
+		return costs.keySet();
+	}
+	
+	public Vertex otherVertex(Vertex v) {
 		return (v.equals(v1)) ? v2 : v1;
 	}
 	
@@ -44,12 +66,11 @@ public class Edge<T> {
 
 	@Override
 	public boolean equals(Object obj) {
-		@SuppressWarnings("unchecked")
-		Edge<T> e = (Edge<T>) obj;
+		Edge e = (Edge) obj;
 		return (this.v1.equals(e.v1) && this.v2.equals(e.v2) && this.costs.equals(e.costs)) ;
 	}
 
-	public boolean contains(Vertex<T> v) {
+	public boolean contains(Vertex v) {
 		if (this.v1.equals(v) || this.v2.equals(v))
 			return true;
 		return false;

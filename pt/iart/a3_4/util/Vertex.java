@@ -3,30 +3,30 @@ package pt.iart.a3_4.util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Vertex<T> implements Comparable<Vertex<T>>{
+public class Vertex implements Comparable<Vertex>{
 	
 	private static int count = 0;
 	private int id;
-	private T obj;
-	private List<Edge<T>> edges = new ArrayList<Edge<T>>();
-	private List<Vertex<T>> neighbors = new ArrayList<Vertex<T>>();
+	private Location info;
+	private List<Edge> edges = new ArrayList<Edge>();
+	private List<Vertex> neighbors = new ArrayList<Vertex>();
 	
-	// T
-	public Vertex(T obj) {
-		this.obj = obj;
+	// Location
+	public Vertex(Location obj) {
+		this.info = obj;
 		id = ++count;
 	}
 
-	public T getValue() {
-		return obj;
+	public Location getValue() {
+		return info;
 	}
 	
 	// Edges
-	public List<Edge<T>> getEdges() {
+	public List<Edge> getEdges() {
 		return edges;
 	}
 	
-	public void addEdge(Edge<T> e) {
+	public void addEdge(Edge e) {
 		edges.add(e);
 	}
 
@@ -35,21 +35,21 @@ public class Vertex<T> implements Comparable<Vertex<T>>{
 	}
 	
 	// Vertexes
-	public void addNeighbor(Vertex<T> v) {
+	public void addNeighbor(Vertex v) {
 		neighbors.add(v);
 	}
 
-	public List<Vertex<T>> getNeighbors() {
+	public List<Vertex> getNeighbors() {
 		return this.neighbors;
 	}
 
 	// Util
 	public void print() {
-		System.out.println("[obj="+obj.toString()+"]");
+		System.out.println("[obj="+info.toString()+"]");
 	}
 	
-	public Edge<T> getConnectingEdge(Vertex<T> v) {
-		for (Edge<T> edge : edges) {
+	public Edge getConnectingEdge(Vertex v) {
+		for (Edge edge : edges) {
 			if (edge.contains(this) && edge.contains(v)) {
 				return edge;
 			}
@@ -58,16 +58,15 @@ public class Vertex<T> implements Comparable<Vertex<T>>{
 	}
 
 	@Override
-	public int compareTo(Vertex<T> arg0) {
+	public int compareTo(Vertex arg0) {
 		if (this.id == arg0.id)
 			return 0;
-		return 1;
+		return 0;
 	}
 	
 	@Override
 	public boolean equals(Object arg0) {
-		@SuppressWarnings("unchecked")
-		Vertex<T> v2 = (Vertex<T>) arg0;
+		Vertex v2 = (Vertex) arg0;
 		return (this.id == v2.id);
 	}
 }

@@ -1,14 +1,15 @@
 package pt.iart.a3_4.util;
 
-import java.util.Set;
+import java.util.HashSet;
 
 public class Location {
 	
 	private String name;
-	private Set<String> tags;
+	private HashSet<String> tags;
 	
 	public Location(String name) {
 		this.name = name;
+		this.tags = new HashSet<String>();
 	}
 
 	public String getName() {
