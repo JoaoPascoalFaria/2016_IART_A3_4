@@ -36,6 +36,21 @@ public class Edge {
 		v1.addNeighbor(v2);
 		v2.addNeighbor(v1);
 	}
+	
+	/**
+	 * MST ONLY
+	 */
+	@SuppressWarnings("unchecked")
+	public Edge(Vertex v1, Vertex v2, Edge e) {
+		costs = (HashMap<Transportation, Integer>) e.costs.clone();
+		this.v1 = v1;
+		this.v2 = v2;
+		
+		v1.addEdge(this);
+		v2.addEdge(this);
+		v1.addNeighbor(v2);
+		v2.addNeighbor(v1);
+	}
 
 	public int getCost(Transportation t) {
 		if(!costs.containsValue(t)) return -1;
@@ -53,6 +68,14 @@ public class Edge {
 	
 	public Vertex otherVertex(Vertex v) {
 		return (v.equals(v1)) ? v2 : v1;
+	}
+	
+	public Vertex getV1(){
+		return v1;
+	}
+	
+	public Vertex getV2(){
+		return v2;
 	}
 	
 	public void print() {

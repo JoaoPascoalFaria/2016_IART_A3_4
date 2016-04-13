@@ -2,6 +2,7 @@ package pt.iart.a3_4.util;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.TreeSet;
 
 
@@ -70,11 +71,20 @@ public class Graph {
 	}
 	
 	private void addMSTEdge(Edge e){
-		addEdge(e);
+		Vertex v1 = this.vertexes.get(this.vertexes.indexOf(e.getV1()));
+		Vertex v2 = this.vertexes.get(this.vertexes.indexOf(e.getV2()));
+		Edge edge = new Edge(v1,v2,e);
+		addEdge(edge);
 	}
 	
 	private void removeMSTEdge(Edge e){
-		if(edges.contains(e)) edges.remove(e);
+		if(edges.contains(e)){
+			edges.remove(e);
+			e.getV1().removeMSTEdge(e);
+			e.getV2().removeMSTEdge(e);
+			e.getV1().removeMSTNeighbor(e.getV2());
+			e.getV2().removeMSTNeighbor(e.getV1());
+		}
 	}
 	
 	private boolean addEdge(Edge e){
@@ -105,33 +115,67 @@ public class Graph {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Graph getMST(){
 		Graph mst = new Graph();
 		mst.vertexCount = this.vertexCount;
-		mst.vertexes = (ArrayList<Vertex>) this.vertexes.clone();
-		for( Vertex v : mst.vertexes){v.clearEdges();}
+		for( Vertex v : this.vertexes){
+			mst.vertexes.add(new Vertex(v));
+		}
 		
-		TreeSet<Edge> edges = new TreeSet<Edge>();
+		TreeSet<Edge> edges = new TreeSet<Edge>(ecomp);
 		edges.addAll(this.edges);
 		
 		for( Edge e : edges){
-			mst.addMSTEdge(e);// TODO vertexes not connected to the edge
+			mst.addMSTEdge(e);
 			if( checkMSTCycle()) mst.removeMSTEdge(e);
 			if( checkMSTCompleted()) break;
 		}
 		
 		return mst;
 	}
+
+	private boolean checkMSTCycle() {
+		HashSet<Vertex> visited = new HashSet<Vertex>();
+		for( Vertex v : this.vertexes){
+			if(!visited.contains(v)){
+				if(checkMSTCycleAux(v, visited, null))
+					return true;
+			}
+		}
+		return false;
+	}
 	
-	private boolean checkMSTCompleted() {
-		// TODO Auto-generated method stub
+	private boolean checkMSTCycleAux(Vertex v, HashSet<Vertex> visited, Vertex previous) {
+		visited.add(v);
+		for( Vertex v2 : v.getNeighbors()){
+			if(!visited.contains(v2)){
+				if(checkMSTCycleAux(v2, visited, v))
+					return true;
+			}
+			else if(!v2.equals(previous))
+				return true;
+		}
 		return false;
 	}
 
-	private boolean checkMSTCycle() {
-		// TODO Auto-generated method stub
-		return false;
+	private boolean checkMSTCompleted() {
+		HashSet<Vertex> visited = new HashSet<Vertex>();
+		checkMSTCompletedAux(this.vertexes.get(0), visited);
+		for( Vertex v : this.vertexes){
+			if(!visited.contains(v)){
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private void checkMSTCompletedAux(Vertex i, HashSet<Vertex> visited) {
+		visited.add(i);
+		for( Vertex v : i.getNeighbors()){
+			if(!visited.contains(v)){
+				checkMSTCompletedAux(v, visited);
+			}
+		}
 	}
 
 	Comparator<Edge> ecomp = new Comparator<Edge>() {

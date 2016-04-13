@@ -11,12 +11,21 @@ public class Vertex implements Comparable<Vertex>{
 	private List<Edge> edges = new ArrayList<Edge>();
 	private List<Vertex> neighbors = new ArrayList<Vertex>();
 	
-	// Location
 	public Vertex(Location obj) {
 		this.info = obj;
 		id = ++count;
 	}
+	
+	/**
+	 * only used in MST function
+	 * @param v vertex
+	 */
+	public Vertex(Vertex v){
+		this.id = v.id;
+		this.info = v.info;
+	}
 
+	// Location
 	public Location getValue() {
 		return info;
 	}
@@ -32,6 +41,14 @@ public class Vertex implements Comparable<Vertex>{
 
 	public void clearEdges() {
 		this.edges.clear();
+	}
+	
+	public void removeMSTEdge(Edge e){
+		if(this.edges.contains(e)) this.edges.remove(e);
+	}
+	
+	public void removeMSTNeighbor(Vertex v) {
+		if(this.neighbors.contains(v)) this.neighbors.remove(v);
 	}
 	
 	// Vertexes
