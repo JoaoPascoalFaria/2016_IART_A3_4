@@ -38,9 +38,9 @@ public class A_Star {
 		this.graph = graph;
 		this.start = start;
 		this.goal = goal;
-		State initial = new State(0, heuristic_evaluation(this.start, this.goal), this.start);
-		openset.add(initial);
 		mst = this.graph.getMST();
+		State initial = new State(0, heuristic_evaluation_distance(this.start, this.goal), this.start);
+		openset.add(initial);
 	}
 
 	public State getPath() {
@@ -63,7 +63,8 @@ public class A_Star {
 				
 				for( Transportation t : e.getTransportations()) {
 					
-					double h = heuristic_evaluation(cVertex, this.goal);
+					// TODO double h = e.getCost(t).getTravelTime();// time vs distance!?
+					double h = heuristic_evaluation_distance(cVertex, this.goal);
 					State s = new State(current, e.otherVertex(cVertex), e, t, h);
 					
 					if( !openset.contains(s))
@@ -85,8 +86,19 @@ public class A_Star {
 		return null;
 	}
 	
-	private double heuristic_evaluation(Vertex v1, Vertex v2) {
-		if( v1.equals(v2) || v1==null || v2==null) return 0;
+	private double heuristic_evaluation_time(Vertex v1, Vertex v2) {
+		if( v1==null || v2==null || v1.equals(v2)) return 0;
+		// TODO
+		return 0;
+	}
+	
+	private double heuristic_evaluation_distance(Vertex v1, Vertex v2) {
+		if( v1==null || v2==null || v1.equals(v2)) return 0;
+		return Math.sqrt( Math.pow(v2.getInfo().getX() - v1.getInfo().getX(), 2) + Math.pow(v2.getInfo().getY() - v1.getInfo().getY(), 2));
+	}
+	
+	private double heuristic_evaluation_mst(Vertex v1, Vertex v2) {
+		if( v1==null || v2==null || v1.equals(v2)) return 0;
 		Vertex v12=null;
 		Vertex v22=null;
 		for( Vertex v : mst.getVertexes()) {

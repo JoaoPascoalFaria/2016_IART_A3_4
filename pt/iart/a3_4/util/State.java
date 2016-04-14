@@ -1,7 +1,9 @@
 package pt.iart.a3_4.util;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 /**
  * 
@@ -41,6 +43,7 @@ public class State implements Comparable<State> {
 	@SuppressWarnings("unchecked")
 	public State(State s, Vertex v, Edge e, Transportation t, double h){
 		this.g = s.g + e.getCost(t).getDistance();// TODO distance or time!? or..
+		//this.g = s.g + e.getCost(t).getTravelTime();
 		this.h = h;
 		this.path = (LinkedHashSet<Vertex>) s.path.clone();
 		this.edgeTransport = (LinkedHashMap<Edge, Transportation>) s.edgeTransport.clone();
@@ -84,5 +87,16 @@ public class State implements Comparable<State> {
 		//return this.g==s.g && this.h==s.h && this.path.equals(s.path) && this.edgeTransport.equals(s.edgeTransport);
 		//talvez funcione assim
 		return this.lastVertex.equals(s.lastVertex);
+	}
+
+	public void print() {
+		Iterator<Vertex> pathIt = this.path.iterator();
+		System.out.print("Path:\n"+pathIt.next().getInfo().getName());
+		for( Map.Entry<Edge, Transportation> e : this.edgeTransport.entrySet()){
+			Vertex v = pathIt.next();
+			System.out.println(" to "+v.getInfo().getName()+" by "+e.getValue().toString());
+			if( pathIt.hasNext()) System.out.print(v.getInfo().getName());
+		}
+		System.out.println();
 	}
 }
