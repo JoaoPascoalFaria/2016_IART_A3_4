@@ -53,7 +53,7 @@ public class Edge {
 	}
 
 	public int getCost(Transportation t) {
-		if(!costs.containsValue(t)) return -1;
+		if(!costs.containsKey(t)) return -1;
 		return costs.get(t);
 	}
 	
@@ -79,12 +79,13 @@ public class Edge {
 	}
 	
 	public void print() {
-		if(costs.containsKey(Transportation.BOAT)) System.out.print("[boat="+costs.get(Transportation.BOAT)+"]");
-		if(costs.containsKey(Transportation.BUS)) System.out.print("[bus="+costs.get(Transportation.BUS)+"]");
-		if(costs.containsKey(Transportation.METRO)) System.out.print("[metro="+costs.get(Transportation.METRO)+"]");
-		if(costs.containsKey(Transportation.TRAIN)) System.out.print("[train="+costs.get(Transportation.TRAIN)+"]");
-		if(costs.containsKey(Transportation.WALK)) System.out.print("[walk="+costs.get(Transportation.WALK)+"]");
-		System.out.println();
+		System.out.print("["+this.v1.getInfo().getName()+"-"+this.v2.getInfo().getName()+" ");
+		if(costs.containsKey(Transportation.BOAT))	System.out.print("boat="+costs.get(Transportation.BOAT));
+		if(costs.containsKey(Transportation.BUS)) 	System.out.print("bus="+costs.get(Transportation.BUS));
+		if(costs.containsKey(Transportation.METRO)) System.out.print("metro="+costs.get(Transportation.METRO));
+		if(costs.containsKey(Transportation.TRAIN)) System.out.print("train="+costs.get(Transportation.TRAIN));
+		if(costs.containsKey(Transportation.WALK)) 	System.out.print("walk="+costs.get(Transportation.WALK));
+		System.out.print("] ");
 	}
 
 	@Override

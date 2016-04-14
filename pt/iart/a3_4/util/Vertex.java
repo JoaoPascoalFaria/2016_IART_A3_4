@@ -6,7 +6,7 @@ import java.util.List;
 public class Vertex implements Comparable<Vertex>{
 	
 	private static int count = 0;
-	private int id;
+	int id;
 	private Location info;
 	private List<Edge> edges = new ArrayList<Edge>();
 	private List<Vertex> neighbors = new ArrayList<Vertex>();
@@ -26,7 +26,7 @@ public class Vertex implements Comparable<Vertex>{
 	}
 
 	// Location
-	public Location getValue() {
+	public Location getInfo() {
 		return info;
 	}
 	
@@ -62,7 +62,12 @@ public class Vertex implements Comparable<Vertex>{
 
 	// Util
 	public void print() {
-		System.out.println("[obj="+info.toString()+"]");
+		System.out.print("vertex "+info.getName()+" edges ");
+		for( Edge e : this.edges){
+			e.print();
+			//System.out.print("["+e.getV1().info.getName()+"-"+e.getV2().info.getName()+" "+e.getCost(Transportation.WALK)+"] ");
+		}
+		System.out.println();
 	}
 	
 	public Edge getConnectingEdge(Vertex v) {

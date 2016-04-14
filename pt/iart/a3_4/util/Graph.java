@@ -23,7 +23,8 @@ public class Graph {
 	
 	// Vertex
 	public void removeVertex(Vertex v) {
-		// TODO nao apaga tudo
+		// TODO nao apaga tudo falta.. neighbors?.. vertex da lista..
+		//não é utilizado
 		for(Edge e : v.getEdges()) {
 			this.edges.remove(e);
 		}
@@ -64,26 +65,33 @@ public class Graph {
 		return addEdge(edge);
 	}
 	
+	public Edge addEdge2(Vertex v1, Vertex v2, int weight) {
+		Edge edge = new Edge(v1, v2, weight);
+		addEdge(edge);
+		return edge;
+	}
+	
 	public Edge addEdge2(Vertex v1, Vertex v2) {
 		Edge edge = new Edge(v1, v2);
 		addEdge(edge);
 		return edge;
 	}
 	
-	private void addMSTEdge(Edge e){
+	private Edge addMSTEdge(Edge e){
 		Vertex v1 = this.vertexes.get(this.vertexes.indexOf(e.getV1()));
 		Vertex v2 = this.vertexes.get(this.vertexes.indexOf(e.getV2()));
 		Edge edge = new Edge(v1,v2,e);
 		addEdge(edge);
+		return edge;
 	}
 	
 	private void removeMSTEdge(Edge e){
 		if(edges.contains(e)){
-			edges.remove(e);
 			e.getV1().removeMSTEdge(e);
 			e.getV2().removeMSTEdge(e);
 			e.getV1().removeMSTNeighbor(e.getV2());
 			e.getV2().removeMSTNeighbor(e.getV1());
+			edges.remove(e);
 		}
 	}
 	
@@ -105,14 +113,13 @@ public class Graph {
 	
 	// Util	
 	public void print() {
-		System.out.println("Vertexes:");
 		for (int i = 0; i < vertexes.size(); i++) {
 			vertexes.get(i).print();
 		}
-		System.out.println("Edges:");
+		/*System.out.println("Edges:");
 		for (int i = 0; i < edges.size(); i++) {
 			edges.get(i).print();
-		}
+		}/***/
 	}
 	
 	public Graph getMST(){
@@ -126,9 +133,11 @@ public class Graph {
 		edges.addAll(this.edges);
 		
 		for( Edge e : edges){
-			mst.addMSTEdge(e);
-			if( checkMSTCycle()) mst.removeMSTEdge(e);
-			if( checkMSTCompleted()) break;
+			Edge edge = mst.addMSTEdge(e);
+			if( mst.checkMSTCycle()){
+				mst.removeMSTEdge(edge);
+			}
+			if( mst.checkMSTCompleted()) break;
 		}
 		
 		return mst;
@@ -178,7 +187,7 @@ public class Graph {
 		}
 	}
 
-	Comparator<Edge> ecomp = new Comparator<Edge>() {
+	private Comparator<Edge> ecomp = new Comparator<Edge>() {
 		@Override
 		public int compare(Edge e1, Edge e2) {
 			int min = Integer.MAX_VALUE;
@@ -190,8 +199,11 @@ public class Graph {
 				if( e2.getCost(t) < min2) min2 = e2.getCost(t);
 			}
 			if(min<min2) return -1;
-			if(min>min2) return 1;
-			return 0;
+			//allow repeated values.
+			if(e1.equals(e2)) return 0;
+			return 1;
+			/*if(min>min2) return 1;
+			return 0;*/
 		}
 	};
 }
