@@ -9,16 +9,16 @@ public class Gui {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Graph g = new Graph();
-		Vertex v1  = g.addVertex2(new Location("a"));
-		Vertex v2  = g.addVertex2(new Location("b"));
-		Vertex v3  = g.addVertex2(new Location("c"));
-		Vertex v4  = g.addVertex2(new Location("d"));
-		Vertex v5  = g.addVertex2(new Location("e"));
-		Vertex v6  = g.addVertex2(new Location("f"));
-		Vertex v7  = g.addVertex2(new Location("g"));
-		Vertex v8  = g.addVertex2(new Location("h"));
-		Vertex v9  = g.addVertex2(new Location("i"));
-		Vertex v10 = g.addVertex2(new Location("j"));
+		Vertex v1  = g.addVertex2(new Location("a", 0, 8));
+		Vertex v2  = g.addVertex2(new Location("b", 3, 8));
+		Vertex v3  = g.addVertex2(new Location("c", 1, 6));
+		Vertex v4  = g.addVertex2(new Location("d", 0, 3));
+		Vertex v5  = g.addVertex2(new Location("e", 3, 4));
+		Vertex v6  = g.addVertex2(new Location("f", 4, 5));
+		Vertex v7  = g.addVertex2(new Location("g", 3, 1));
+		Vertex v8  = g.addVertex2(new Location("h", 7, 1));
+		Vertex v9  = g.addVertex2(new Location("i", 8, 2));
+		Vertex v10 = g.addVertex2(new Location("j", 10, 1));
 
 		g.addEdge2(v1, v2, 3);
 		g.addEdge2(v1, v4, 6);

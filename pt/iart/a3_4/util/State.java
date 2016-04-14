@@ -9,8 +9,8 @@ import java.util.LinkedHashSet;
  */
 public class State implements Comparable<State> {
 	
-	private int g;
-	private int h;
+	private double g;
+	private double h;
 	private LinkedHashSet<Vertex> path;
 	private Vertex lastVertex;// prevents path.toArray()[last]
 	private LinkedHashMap<Edge, Transportation> edgeTransport;
@@ -21,7 +21,7 @@ public class State implements Comparable<State> {
 	 * @param h cost
 	 * @param initial vertex
 	 */
-	public State(int g, int h, Vertex current) {
+	public State(double g, double h, Vertex current) {
 		path = new LinkedHashSet<Vertex>();
 		edgeTransport = new LinkedHashMap<Edge, Transportation>();
 		this.g = g;
@@ -39,8 +39,8 @@ public class State implements Comparable<State> {
 	 * @param h this state heuristic value
 	 */
 	@SuppressWarnings("unchecked")
-	public State(State s, Vertex v, Edge e, Transportation t, int h){
-		this.g = s.g + e.getCost(t);
+	public State(State s, Vertex v, Edge e, Transportation t, double h){
+		this.g = s.g + e.getCost(t).getDistance();// TODO distance or time!? or..
 		this.h = h;
 		this.path = (LinkedHashSet<Vertex>) s.path.clone();
 		this.edgeTransport = (LinkedHashMap<Edge, Transportation>) s.edgeTransport.clone();
@@ -49,11 +49,11 @@ public class State implements Comparable<State> {
 		this.lastVertex = v;
 	}
 	
-	public int getG() {
+	public double getG() {
 		return g;
 	}
 
-	public int getH() {
+	public double getH() {
 		return h;
 	}
 
@@ -71,8 +71,8 @@ public class State implements Comparable<State> {
 
 	@Override
 	public int compareTo(State s) {
-		int myF = this.g+this.h;
-		int otherF = s.g+s.h;
+		double myF = this.g+this.h;
+		double otherF = s.g+s.h;
 		if(myF < otherF) return -1;
 		if(myF > otherF) return 1;
 		return 0;

@@ -6,7 +6,7 @@ import java.util.List;
 public class Vertex implements Comparable<Vertex>{
 	
 	private static int count = 0;
-	int id;
+	private int id;
 	private Location info;
 	private List<Edge> edges = new ArrayList<Edge>();
 	private List<Vertex> neighbors = new ArrayList<Vertex>();

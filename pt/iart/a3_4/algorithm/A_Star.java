@@ -63,7 +63,7 @@ public class A_Star {
 				
 				for( Transportation t : e.getTransportations()) {
 					
-					int h = heuristic_evaluation(cVertex, this.goal);
+					double h = heuristic_evaluation(cVertex, this.goal);
 					State s = new State(current, e.otherVertex(cVertex), e, t, h);
 					
 					if( !openset.contains(s))
@@ -85,7 +85,7 @@ public class A_Star {
 		return null;
 	}
 	
-	private int heuristic_evaluation(Vertex v1, Vertex v2) {
+	private double heuristic_evaluation(Vertex v1, Vertex v2) {
 		if( v1.equals(v2) || v1==null || v2==null) return 0;
 		Vertex v12=null;
 		Vertex v22=null;
@@ -100,21 +100,21 @@ public class A_Star {
 		return pathCostMST(v12,v22);
 	}
 	
-	private int pathCostMST(Vertex v1, Vertex v2){
+	private double pathCostMST(Vertex v1, Vertex v2){
 		HashSet<Vertex> visited = new HashSet<Vertex>();
 		return pathCostMSTAux(v1, v2, visited);
 	}
 	
-	private int pathCostMSTAux(Vertex current, Vertex goal, HashSet<Vertex> visited) {
+	private double pathCostMSTAux(Vertex current, Vertex goal, HashSet<Vertex> visited) {
 		visited.add(current);
 		for( Edge e : current.getEdges()){
 			Vertex v = e.otherVertex(current);
 			if( v.equals(goal))
-				return e.getCost(e.getTransportations().iterator().next());
+				return e.getCost(e.getTransportations().iterator().next()).getDistance();// TODO distance!?
 			if(!visited.contains(v)){
-				int r = pathCostMSTAux(v, goal, visited);
+				double r = pathCostMSTAux(v, goal, visited);
 				if(r>-1){
-					return r + e.getCost(e.getTransportations().iterator().next());
+					return r + e.getCost(e.getTransportations().iterator().next()).getDistance();// TODO distance!?
 				}
 			}
 		}

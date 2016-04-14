@@ -6,19 +6,20 @@ import java.util.Set;
 public class Edge {
 
 	private Vertex v1, v2;
-	private HashMap<Transportation, Integer> costs;
+	private HashMap<Transportation, Cost> costs;
 	
 	/**
 	 * 
 	 * @param v1 vertex 1
 	 * @param v2 vertex 2
-	 * @param weight WALK cost from v1 to v2
+	 * @param time walking time from v1 to v2
 	 */
-	public Edge(Vertex v1, Vertex v2, int weight) {
-		costs = new HashMap<Transportation, Integer>();
+	public Edge(Vertex v1, Vertex v2, int time) {
+		costs = new HashMap<Transportation, Cost>();
 		this.v1 = v1;
 		this.v2 = v2;
-		costs.put(Transportation.WALK, weight);
+		Cost c = new Cost(getLength(), time);
+		costs.put(Transportation.WALK, c);
 		
 		v1.addEdge(this);
 		v2.addEdge(this);
@@ -27,7 +28,7 @@ public class Edge {
 	}
 	
 	public Edge(Vertex v1, Vertex v2) {
-		costs = new HashMap<Transportation, Integer>();
+		costs = new HashMap<Transportation, Cost>();
 		this.v1 = v1;
 		this.v2 = v2;
 		
@@ -42,7 +43,7 @@ public class Edge {
 	 */
 	@SuppressWarnings("unchecked")
 	public Edge(Vertex v1, Vertex v2, Edge e) {
-		costs = (HashMap<Transportation, Integer>) e.costs.clone();
+		costs = (HashMap<Transportation, Cost>) e.costs.clone();
 		this.v1 = v1;
 		this.v2 = v2;
 		
@@ -52,8 +53,8 @@ public class Edge {
 		v2.addNeighbor(v1);
 	}
 
-	public int getCost(Transportation t) {
-		if(!costs.containsKey(t)) return -1;
+	public Cost getCost(Transportation t) {
+		if(!costs.containsKey(t)) return null;
 		return costs.get(t);
 	}
 	
@@ -78,13 +79,18 @@ public class Edge {
 		return v2;
 	}
 	
+	// Util
+	public double getLength() {
+		return Math.sqrt( Math.pow(v2.getInfo().getX() - v1.getInfo().getX(), 2) + Math.pow(v2.getInfo().getY() - v1.getInfo().getY(), 2));
+	}
+	
 	public void print() {
 		System.out.print("["+this.v1.getInfo().getName()+"-"+this.v2.getInfo().getName()+" ");
-		if(costs.containsKey(Transportation.BOAT))	System.out.print("boat="+costs.get(Transportation.BOAT));
-		if(costs.containsKey(Transportation.BUS)) 	System.out.print("bus="+costs.get(Transportation.BUS));
-		if(costs.containsKey(Transportation.METRO)) System.out.print("metro="+costs.get(Transportation.METRO));
-		if(costs.containsKey(Transportation.TRAIN)) System.out.print("train="+costs.get(Transportation.TRAIN));
-		if(costs.containsKey(Transportation.WALK)) 	System.out.print("walk="+costs.get(Transportation.WALK));
+		if(costs.containsKey(Transportation.BOAT))	System.out.print("boat="+costs.get(Transportation.BOAT).toString());
+		if(costs.containsKey(Transportation.BUS)) 	System.out.print("bus="+costs.get(Transportation.BUS).toString());
+		if(costs.containsKey(Transportation.METRO)) System.out.print("metro="+costs.get(Transportation.METRO).toString());
+		if(costs.containsKey(Transportation.TRAIN)) System.out.print("train="+costs.get(Transportation.TRAIN).toString());
+		if(costs.containsKey(Transportation.WALK)) 	System.out.print("walk="+costs.get(Transportation.WALK).toString());
 		System.out.print("] ");
 	}
 

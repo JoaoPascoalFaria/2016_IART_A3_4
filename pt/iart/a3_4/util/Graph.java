@@ -11,14 +11,9 @@ public class Graph {
 	private ArrayList<Vertex> vertexes;
 	private ArrayList<Edge> edges;
 	
-	private int vertexCount;
-	private int edgeCount;
-	
 	public Graph() {
 		this.vertexes = new ArrayList<Vertex>();
 		this.edges = new ArrayList<Edge>();
-		this.vertexCount = 0;
-		this.edgeCount = 0;
 	}
 	
 	// Vertex
@@ -49,14 +44,10 @@ public class Graph {
 	public ArrayList<Vertex> getVertexes() {
 		return vertexes;
 	}
-
-	public int getVertexCount() {
-		return vertexCount;
-	}
-
+	
 	//Edge
-	public boolean addEdge(Vertex v1, Vertex v2, int weight) {
-		Edge edge = new Edge(v1, v2, weight);
+	public boolean addEdge(Vertex v1, Vertex v2, int time) {
+		Edge edge = new Edge(v1, v2, time);
 		return addEdge(edge);
 	}
 	
@@ -65,8 +56,8 @@ public class Graph {
 		return addEdge(edge);
 	}
 	
-	public Edge addEdge2(Vertex v1, Vertex v2, int weight) {
-		Edge edge = new Edge(v1, v2, weight);
+	public Edge addEdge2(Vertex v1, Vertex v2, int time) {
+		Edge edge = new Edge(v1, v2, time);
 		addEdge(edge);
 		return edge;
 	}
@@ -106,10 +97,6 @@ public class Graph {
 	public ArrayList<Edge> getEdges() {
 		return edges;
 	}
-
-	public int getEdgeCount() {
-		return edgeCount;
-	}
 	
 	// Util	
 	public void print() {
@@ -117,14 +104,13 @@ public class Graph {
 			vertexes.get(i).print();
 		}
 		/*System.out.println("Edges:");
-		for (int i = 0; i < edges.size(); i++) {
+		for (double i = 0; i < edges.size(); i++) {
 			edges.get(i).print();
 		}/***/
 	}
 	
 	public Graph getMST(){
 		Graph mst = new Graph();
-		mst.vertexCount = this.vertexCount;
 		for( Vertex v : this.vertexes){
 			mst.vertexes.add(new Vertex(v));
 		}
@@ -190,13 +176,13 @@ public class Graph {
 	private Comparator<Edge> ecomp = new Comparator<Edge>() {
 		@Override
 		public int compare(Edge e1, Edge e2) {
-			int min = Integer.MAX_VALUE;
-			int min2 = Integer.MAX_VALUE;
+			double min = Integer.MAX_VALUE;
+			double min2 = Integer.MAX_VALUE;
 			for( Transportation t : e1.getTransportations()){
-				if( e1.getCost(t) < min) min = e1.getCost(t);
+				if( e1.getCost(t).getDistance() < min) min = e1.getCost(t).getDistance();// TODO distance!?
 			}
 			for( Transportation t : e2.getTransportations()){
-				if( e2.getCost(t) < min2) min2 = e2.getCost(t);
+				if( e2.getCost(t).getDistance() < min2) min2 = e2.getCost(t).getDistance();// TODO distance!?
 			}
 			if(min<min2) return -1;
 			//allow repeated values.
