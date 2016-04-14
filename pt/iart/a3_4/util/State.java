@@ -12,6 +12,7 @@ public class State implements Comparable<State> {
 	private int g;
 	private int h;
 	private LinkedHashSet<Vertex> path;
+	private Vertex lastVertex;// prevents path.toArray()[last]
 	private LinkedHashMap<Edge, Transportation> edgeTransport;
 
 	/**
@@ -26,6 +27,7 @@ public class State implements Comparable<State> {
 		this.g = g;
 		this.h = h;
 		path.add(current);
+		this.lastVertex = current;
 	}
 	
 	/**
@@ -44,6 +46,7 @@ public class State implements Comparable<State> {
 		this.edgeTransport = (LinkedHashMap<Edge, Transportation>) s.edgeTransport.clone();
 		this.path.add(v);
 		this.edgeTransport.put(e, t);
+		this.lastVertex = v;
 	}
 	
 	public int getG() {
@@ -61,6 +64,10 @@ public class State implements Comparable<State> {
 	public LinkedHashMap<Edge, Transportation> getEdgeTransport() {
 		return edgeTransport;
 	}
+	
+	public Vertex currentVertex(){
+		return this.lastVertex;
+	}
 
 	@Override
 	public int compareTo(State s) {
@@ -74,6 +81,8 @@ public class State implements Comparable<State> {
 	@Override
 	public boolean equals(Object obj) {
 		State s = (State) obj;
-		return this.g==s.g && this.h==s.h && this.path.equals(s.path) && this.edgeTransport.equals(s.edgeTransport);
+		//return this.g==s.g && this.h==s.h && this.path.equals(s.path) && this.edgeTransport.equals(s.edgeTransport);
+		//talvez funcione assim
+		return this.lastVertex.equals(s.lastVertex);
 	}
 }
