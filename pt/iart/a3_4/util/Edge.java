@@ -13,8 +13,9 @@ public class Edge {
 	 * @param v1 vertex 1
 	 * @param v2 vertex 2
 	 * @param time walking time from v1 to v2
+	 * @info time assumed to be 5km/h for walking
 	 */
-	public Edge(Vertex v1, Vertex v2, int time) {
+	public Edge(Vertex v1, Vertex v2, double time) {
 		costs = new HashMap<Transportation, Cost>();
 		this.v1 = v1;
 		this.v2 = v2;
@@ -65,6 +66,18 @@ public class Edge {
 	
 	public Set<Transportation> getTransportations(){
 		return costs.keySet();
+	}
+	
+	public void addTransportation(Transportation t){
+		Cost c;
+		if(t==Transportation.WALK) c = new Cost(this.getLength(), this.getLength()/5*60);
+		else c = new Cost(this.getLength());
+		this.costs.put(t, c);
+	}
+	
+	public void addTransportation(Transportation t, double cost){
+		Cost c = new Cost(this.getLength(), cost);
+		this.costs.put(t, c);
 	}
 	
 	public Vertex otherVertex(Vertex v) {

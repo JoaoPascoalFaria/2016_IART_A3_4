@@ -41,9 +41,16 @@ public class State implements Comparable<State> {
 	 * @param h this state heuristic value
 	 */
 	@SuppressWarnings("unchecked")
-	public State(State s, Vertex v, Edge e, Transportation t, double h){
-		this.g = s.g + e.getCost(t).getDistance();// TODO distance or time!? or..
-		//this.g = s.g + e.getCost(t).getTravelTime();
+	public State(State s, Vertex v, Edge e, Transportation t, double h, Heuristic heuristic){
+		// TODO distance or time!? or..
+		if( heuristic == Heuristic.DISTANCE)
+			this.g = s.g + e.getCost(t).getDistance();
+		else if( heuristic == Heuristic.TIME)
+			this.g = s.g + e.getCost(t).getTravelTime();
+		else if( heuristic == Heuristic.WALK_DISTANCE)//TODO
+			this.g = s.g + e.getCost(t).getTravelTime();
+		else//TODO SWAPS
+			this.g = s.g + e.getCost(t).getTravelTime();
 		this.h = h;
 		this.path = (LinkedHashSet<Vertex>) s.path.clone();
 		this.edgeTransport = (LinkedHashMap<Edge, Transportation>) s.edgeTransport.clone();
@@ -78,6 +85,8 @@ public class State implements Comparable<State> {
 		double otherF = s.g+s.h;
 		if(myF < otherF) return -1;
 		if(myF > otherF) return 1;
+		/*if(this.equals(s)) return 0;
+		return 1;*/
 		return 0;
 	}
 

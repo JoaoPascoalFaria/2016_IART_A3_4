@@ -5,6 +5,7 @@ import java.util.TreeSet;
 
 import pt.iart.a3_4.util.Edge;
 import pt.iart.a3_4.util.Graph;
+import pt.iart.a3_4.util.Heuristic;
 import pt.iart.a3_4.util.State;
 import pt.iart.a3_4.util.Transportation;
 import pt.iart.a3_4.util.Vertex;
@@ -15,6 +16,7 @@ public class A_Star {
 	private Graph mst;
 	private Vertex start;
 	private Vertex goal;
+	private Heuristic heuristic;
 	
 	// The set of nodes already evaluated
 	//private HashSet<State> closedset;´
@@ -31,15 +33,16 @@ public class A_Star {
 	 * @param start vertex
 	 * @param goal vertex
 	 */
-	public A_Star(Graph graph, Vertex start, Vertex goal) {
+	public A_Star(Graph graph, Vertex start, Vertex goal, Heuristic h) {
 		//closedset = new HashSet<State>();
 		closedset = new HashSet<Vertex>();
 		openset = new TreeSet<State>();
 		this.graph = graph;
 		this.start = start;
 		this.goal = goal;
+		this.heuristic = h;
 		mst = this.graph.getMST();
-		State initial = new State(0, heuristic_evaluation_distance(this.start, this.goal), this.start);
+		State initial = new State(0, heuristic_evaluation(this.start, this.goal), this.start);
 		openset.add(initial);
 	}
 
@@ -52,9 +55,17 @@ public class A_Star {
 			current = openset.pollFirst();
 			cVertex = current.currentVertex();
 			
+			System.out.println("analizing vertex "+cVertex.getInfo().getName()+" with cost g="+current.getG());
+			System.out.print("openset: ");for( State s : this.openset) {
+				System.out.print(s.currentVertex().getInfo().getName()+"+ ");
+			}System.out.println();
+			System.out.print("closedset: ");for( Vertex v : this.closedset){
+				System.out.print(v.getInfo().getName()+"+ ");
+			}System.out.println();
+			
 			if(cVertex.equals(this.goal))
 				return current;
-			closedset.add(cVertex);
+			this.closedset.add(cVertex);
 			
 			for( Edge e : cVertex.getEdges()){
 				
@@ -63,13 +74,15 @@ public class A_Star {
 				
 				for( Transportation t : e.getTransportations()) {
 					
-					// TODO double h = e.getCost(t).getTravelTime();// time vs distance!?
-					double h = heuristic_evaluation_distance(cVertex, this.goal);
-					State s = new State(current, e.otherVertex(cVertex), e, t, h);
+					double h = heuristic_evaluation(cVertex, this.goal);
+					State s = new State(current, e.otherVertex(cVertex), e, t, h, this.heuristic);
 					
-					if( !openset.contains(s))
+					System.out.println("<neighbor "+s.currentVertex().getInfo().getName()+" "+(s.getG()+s.getH())+">");
+					
+					if(!openset_contains(s) /*!openset.contains(s)*/)
 						openset.add(s);
 					else {
+						System.out.println("<contains "+s.currentVertex().getInfo().getName()+">");
 						for( State st : openset) {
 							if(st.equals(s)){
 								if(st.getG() > s.getG()){
@@ -85,20 +98,42 @@ public class A_Star {
 		}
 		return null;
 	}
+
+	private double heuristic_evaluation(Vertex v1, Vertex v2){
+		if( v1==null || v2==null || v1.equals(v2)) return 0;//infinity instea 0?
+		if( this.heuristic == Heuristic.DISTANCE)
+			return heuristic_evaluation_distance(v1,v2);
+		else if( this.heuristic == Heuristic.TIME)
+			return heuristic_evaluation_time(v1,v2);
+		else if( this.heuristic == Heuristic.WALK_DISTANCE)//TODO
+			return heuristic_evaluation_walk_distance(v1,v2);
+		return heuristic_evaluation_swaps(v1,v2);//TODO SWAPS
+		//return heuristic_evaluation_distance(v1,v2); // distance
+	}
 	
-	private double heuristic_evaluation_time(Vertex v1, Vertex v2) {
-		if( v1==null || v2==null || v1.equals(v2)) return 0;
-		// TODO
+	private double heuristic_evaluation_swaps(Vertex v1, Vertex v2) {
+		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	private double heuristic_evaluation_walk_distance(Vertex v1, Vertex v2) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private double heuristic_evaluation_time(Vertex v1, Vertex v2) {
+		// walking at 5 Km/h nothing should be slower than walking
+		return 0;//5*Math.sqrt( Math.pow(v2.getInfo().getX() - v1.getInfo().getX(), 2) + Math.pow(v2.getInfo().getY() - v1.getInfo().getY(), 2));
 	}
 	
 	private double heuristic_evaluation_distance(Vertex v1, Vertex v2) {
-		if( v1==null || v2==null || v1.equals(v2)) return 0;
 		return Math.sqrt( Math.pow(v2.getInfo().getX() - v1.getInfo().getX(), 2) + Math.pow(v2.getInfo().getY() - v1.getInfo().getY(), 2));
 	}
 	
+	/**
+	 * not good. overestimates. could be used if we needed to pass trough some intermediate points
+	 */
 	private double heuristic_evaluation_mst(Vertex v1, Vertex v2) {
-		if( v1==null || v2==null || v1.equals(v2)) return 0;
 		Vertex v12=null;
 		Vertex v22=null;
 		for( Vertex v : mst.getVertexes()) {
@@ -131,5 +166,16 @@ public class A_Star {
 			}
 		}
 		return -1;
+	}
+	
+	/**
+	 * 
+	 * @description avoids using compareTo instead of equals
+	 */
+	private boolean openset_contains(State s) {
+		for(State st : this.openset){
+			if(st.equals(s)) return true;
+		}
+		return false;
 	}
 }

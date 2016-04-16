@@ -2,6 +2,7 @@ package pt.iart.a3_4.gui;
 
 import pt.iart.a3_4.algorithm.A_Star;
 import pt.iart.a3_4.util.Graph;
+import pt.iart.a3_4.util.Heuristic;
 import pt.iart.a3_4.util.Location;
 import pt.iart.a3_4.util.Vertex;
 
@@ -57,7 +58,7 @@ public class Gui {
 		System.out.println("printing mst");
 		mst.print();
 		
-		A_Star as = new A_Star(g, v2, v9);
+		A_Star as = new A_Star(g, v2, v9, Heuristic.TIME);
 		as.getPath().print();
 	}
 

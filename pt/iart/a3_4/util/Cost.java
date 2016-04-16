@@ -2,15 +2,15 @@ package pt.iart.a3_4.util;
 
 public class Cost {
 	
-	private double distance;
-	private int time;
+	private double distance;// KM
+	private double time;// min
 	
 	public Cost(double length) {
 		this.distance = length;
 		this.time = -1;
 	}
 	
-	public Cost(double length, int travelTime) {
+	public Cost(double length, double travelTime) {
 		this.distance = length;
 		this.time = travelTime;
 	}
@@ -19,7 +19,7 @@ public class Cost {
 		return this.distance;
 	}
 	
-	public int getTravelTime(){
+	public double getTravelTime(){
 		return this.time;
 	}
 

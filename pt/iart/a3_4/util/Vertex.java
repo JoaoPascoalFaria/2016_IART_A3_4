@@ -62,7 +62,7 @@ public class Vertex implements Comparable<Vertex>{
 
 	// Util
 	public void print() {
-		System.out.print("vertex "+info.getName()+" edges ");
+		System.out.print("vertex "+info.getName()+"["+this.id+"] edges ");
 		for( Edge e : this.edges){
 			e.print();
 			//System.out.print("["+e.getV1().info.getName()+"-"+e.getV2().info.getName()+" "+e.getCost(Transportation.WALK)+"] ");
