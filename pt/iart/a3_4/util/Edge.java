@@ -19,6 +19,7 @@ public class Edge {
 		costs = new HashMap<Transportation, Cost>();
 		this.v1 = v1;
 		this.v2 = v2;
+		if(time < getLength()/5*60) time=getLength()/5*60;//max 5km/h
 		Cost c = new Cost(getLength(), time);
 		costs.put(Transportation.WALK, c);
 		
@@ -69,13 +70,32 @@ public class Edge {
 	}
 	
 	public void addTransportation(Transportation t){
-		Cost c;
-		if(t==Transportation.WALK) c = new Cost(this.getLength(), this.getLength()/5*60);
-		else c = new Cost(this.getLength());
+		Cost c = new Cost(this.getLength(), this.getLength()/5*60);// if no time was set, slowest possible = walking speed
 		this.costs.put(t, c);
 	}
 	
+	/**
+	 * 
+	 * @param t transportation
+	 * @param cost time that transportation takes to travel trough the edge
+	 */
 	public void addTransportation(Transportation t, double cost){
+		// max speeds
+		if( t==Transportation.WALK) {// 9km/h
+			if( cost < getLength()/9*60) cost = getLength()/9*60;
+		}
+		else if( t==Transportation.TRAIN) {// 200km/h
+			if( cost < getLength()/200*60) cost = getLength()/200*60;
+		}
+		else if( t==Transportation.BUS) {// 100km/h
+			if( cost < getLength()/100*60) cost = getLength()/100*60;
+		}
+		else if( t==Transportation.METRO) {// 90km/h
+			if( cost < getLength()/90*60) cost = getLength()/90*60;
+		}
+		else if( t==Transportation.BOAT) {// 50km/h
+			if( cost < getLength()/50*60) cost = getLength()/50*60;
+		}
 		Cost c = new Cost(this.getLength(), cost);
 		this.costs.put(t, c);
 	}

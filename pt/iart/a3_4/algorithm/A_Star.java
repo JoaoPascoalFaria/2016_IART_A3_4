@@ -122,8 +122,8 @@ public class A_Star {
 	}
 
 	private double heuristic_evaluation_time(Vertex v1, Vertex v2) {
-		// walking at 5 Km/h nothing should be slower than walking
-		return 0;//5*Math.sqrt( Math.pow(v2.getInfo().getX() - v1.getInfo().getX(), 2) + Math.pow(v2.getInfo().getY() - v1.getInfo().getY(), 2));
+		// traint at 200 Km/h nothing should be faster than train
+		return Math.sqrt( Math.pow(v2.getInfo().getX() - v1.getInfo().getX(), 2) + Math.pow(v2.getInfo().getY() - v1.getInfo().getY(), 2))/200*60;
 	}
 	
 	private double heuristic_evaluation_distance(Vertex v1, Vertex v2) {
