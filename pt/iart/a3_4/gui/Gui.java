@@ -22,41 +22,38 @@ public class Gui {
 		Vertex v9  = g.addVertex2(new Location("i", 8, 2));
 		Vertex v10 = g.addVertex2(new Location("j", 10, 1));
 
-		g.addEdge2(v1, v2, 3);
-		g.addEdge2(v1, v4, 6);
-		g.addEdge2(v1, v6, 9);
+		g.addEdge(v1, v2);
+		g.addEdge(v1, v4);
+		g.addEdge(v1, v6);
 		
-		g.addEdge2(v2, v3, 2);
-		g.addEdge2(v2, v4, 4);
-		g.addEdge2(v2, v5, 9);
-		g.addEdge2(v2, v6, 9);
+		g.addEdge(v2, v3);
+		g.addEdge(v2, v4);
+		g.addEdge(v2, v5);
+		g.addEdge(v2, v6);
 		
-		g.addEdge2(v3, v4, 2);
-		g.addEdge2(v3, v5, 8);
-		g.addEdge2(v3, v7, 9);
+		g.addEdge(v3, v4);
+		g.addEdge(v3, v5);
+		g.addEdge(v3, v7);
 		
-		g.addEdge2(v4, v7, 9);
+		g.addEdge(v4, v7);
 
-		g.addEdge2(v5, v6, 8);
-		g.addEdge2(v5, v7, 7);
-		g.addEdge2(v5, v9, 9);
-		g.addEdge2(v5, v10, 10);
+		g.addEdge(v5, v6);
+		g.addEdge(v5, v7);
+		g.addEdge(v5, v9);
+		g.addEdge(v5, v10);
 
-		g.addEdge2(v6, v10, 18);
+		g.addEdge(v6, v10);
 
-		g.addEdge2(v7, v8, 4);
-		g.addEdge2(v7, v9, 5);
+		g.addEdge(v7, v8);
+		g.addEdge(v7, v9);
 
-		g.addEdge2(v8, v9, 1);
-		g.addEdge2(v8, v10, 4);
+		g.addEdge(v8, v9);
+		g.addEdge(v8, v10);
 		
-		g.addEdge2(v9, v10, 3);
+		g.addEdge(v9, v10);
 		
 		System.out.println("printing graph");
 		g.print();
-		Graph mst = g.getMST();
-		System.out.println("printing mst");
-		mst.print();
 		
 		A_Star as = new A_Star(g, v2, v9, Heuristic.TIME);
 		as.getPath().print();

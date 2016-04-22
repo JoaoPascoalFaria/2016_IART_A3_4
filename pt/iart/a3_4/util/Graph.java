@@ -46,8 +46,8 @@ public class Graph {
 	}
 	
 	//Edge
-	public boolean addEdge(Vertex v1, Vertex v2, int time) {
-		Edge edge = new Edge(v1, v2, time);
+	public boolean addEdge(Vertex v1, Vertex v2, int distance) {
+		Edge edge = new Edge(v1, v2, distance);
 		return addEdge(edge);
 	}
 	
@@ -56,8 +56,8 @@ public class Graph {
 		return addEdge(edge);
 	}
 	
-	public Edge addEdge2(Vertex v1, Vertex v2, int time) {
-		Edge edge = new Edge(v1, v2, time);
+	public Edge addEdge2(Vertex v1, Vertex v2, int distance) {
+		Edge edge = new Edge(v1, v2, distance);
 		addEdge(edge);
 		return edge;
 	}

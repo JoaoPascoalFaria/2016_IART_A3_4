@@ -12,15 +12,16 @@ public class Edge {
 	 * 
 	 * @param v1 vertex 1
 	 * @param v2 vertex 2
-	 * @param time walking time from v1 to v2
+	 * @param distance walking distance from v1 to v2
 	 * @info time assumed to be 5km/h for walking
 	 */
-	public Edge(Vertex v1, Vertex v2, double time) {
+	public Edge(Vertex v1, Vertex v2, double distance) {
 		costs = new HashMap<Transportation, Cost>();
 		this.v1 = v1;
 		this.v2 = v2;
-		if(time < getLength()/5*60) time=getLength()/5*60;//max 5km/h
-		Cost c = new Cost(getLength(), time);
+		
+		if(distance < getLength()) distance=getLength();// min straight line length
+		Cost c = new Cost(distance, distance/5*60, 0);
 		costs.put(Transportation.WALK, c);
 		
 		v1.addEdge(this);
@@ -33,6 +34,9 @@ public class Edge {
 		costs = new HashMap<Transportation, Cost>();
 		this.v1 = v1;
 		this.v2 = v2;
+		
+		Cost c = new Cost(getLength(), getLength()/5*60, 0);
+		costs.put(Transportation.WALK, c);
 		
 		v1.addEdge(this);
 		v2.addEdge(this);
@@ -70,34 +74,76 @@ public class Edge {
 	}
 	
 	public void addTransportation(Transportation t){
-		Cost c = new Cost(this.getLength(), this.getLength()/5*60);// if no time was set, slowest possible = walking speed
+		Cost c = new Cost(this.getLength(), this.getLength()/5*60, 0);// if no time was set, slowest possible = walking speed
 		this.costs.put(t, c);
 	}
 	
-	/**
-	 * 
-	 * @param t transportation
-	 * @param cost time that transportation takes to travel trough the edge
-	 */
-	public void addTransportation(Transportation t, double cost){
-		// max speeds
+	public void addTransportationD(Transportation t, double distance){
+		if( distance < getLength()) distance = getLength();
+		Cost c = new Cost(distance, this.getLength()/5*60, 0);// if no time was set, slowest possible = walking speed
+		this.costs.put(t, c);
+	}
+	
+	public void addTransportationP(Transportation t, double price){
+		Cost c = new Cost(this.getLength(), this.getLength()/5*60, price);// if no time was set, slowest possible = walking speed
+		this.costs.put(t, c);
+	}
+	
+	public void addTransportationT(Transportation t, double edgeTime){
+		edgeTime = checkTravelTime(t, getLength(), edgeTime);
+		Cost c = new Cost(this.getLength(), edgeTime, 0);
+		this.costs.put(t, c);
+	}
+	
+	public void addTransportationDP(Transportation t, double distance, double price){
+		if( distance < getLength()) distance = getLength();
+		Cost c = new Cost(this.getLength(), this.getLength()/5*60, price);// if no time was set, slowest possible = walking speed
+		this.costs.put(t, c);
+	}
+	
+	public void addTransportationTD(Transportation t, double edgeTime, double distance){
+		if( distance < getLength()) distance = getLength();
+		edgeTime = checkTravelTime(t, distance, edgeTime);
+		Cost c = new Cost(distance, edgeTime, 0);
+		this.costs.put(t, c);
+	}
+	
+	public void addTransportationTP(Transportation t, double edgeTime, double price){
+		edgeTime = checkTravelTime(t, getLength(), edgeTime);
+		Cost c = new Cost(this.getLength(), edgeTime, price);
+		this.costs.put(t, c);
+	}
+	
+	public void addTransportationTDP(Transportation t, double edgeTime, double distance, double price){
+		if( distance < getLength()) distance = getLength();
+		edgeTime = checkTravelTime(t, distance, edgeTime);
+		Cost c = new Cost(distance, edgeTime, price);
+		this.costs.put(t, c);
+	}
+	
+	private double checkTravelTime(Transportation t, double distance, double edgeTime) {
 		if( t==Transportation.WALK) {// 9km/h
-			if( cost < getLength()/9*60) cost = getLength()/9*60;
+			//if( cost < getLength()/9*60) cost = getLength()/9*60;
+			//only median human walking speed as time
+			return distance/5*60;
 		}
 		else if( t==Transportation.TRAIN) {// 200km/h
-			if( cost < getLength()/200*60) cost = getLength()/200*60;
+			if( edgeTime < distance/200*60)
+				return distance/200*60;
 		}
 		else if( t==Transportation.BUS) {// 100km/h
-			if( cost < getLength()/100*60) cost = getLength()/100*60;
+			if( edgeTime < distance/100*60)
+				return distance/100*60;
 		}
 		else if( t==Transportation.METRO) {// 90km/h
-			if( cost < getLength()/90*60) cost = getLength()/90*60;
+			if( edgeTime < distance/90*60)
+				return distance/90*60;
 		}
 		else if( t==Transportation.BOAT) {// 50km/h
-			if( cost < getLength()/50*60) cost = getLength()/50*60;
+			if( edgeTime < distance/50*60)
+				return distance/50*60;
 		}
-		Cost c = new Cost(this.getLength(), cost);
-		this.costs.put(t, c);
+		return edgeTime;
 	}
 	
 	public Vertex otherVertex(Vertex v) {
