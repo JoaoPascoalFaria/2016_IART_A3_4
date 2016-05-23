@@ -6,6 +6,7 @@ import java.util.TreeSet;
 import pt.iart.a3_4.util.Edge;
 import pt.iart.a3_4.util.Graph;
 import pt.iart.a3_4.util.Heuristic;
+import pt.iart.a3_4.util.Options;
 import pt.iart.a3_4.util.State;
 import pt.iart.a3_4.util.Transportation;
 import pt.iart.a3_4.util.Vertex;
@@ -14,9 +15,7 @@ public class A_Star {
 	
 	private Graph graph;
 	private Graph mst;
-	private Vertex start;
-	private Vertex goal;
-	private Heuristic heuristic;
+	private Options options = Options.getInstance();
 	
 	// The set of nodes already evaluated
 	//private HashSet<State> closedset;´
@@ -33,16 +32,13 @@ public class A_Star {
 	 * @param start vertex
 	 * @param goal vertex
 	 */
-	public A_Star(Graph graph, Vertex start, Vertex goal, Heuristic h) {
+	public A_Star(Graph graph) {
 		//closedset = new HashSet<State>();
 		closedset = new HashSet<Vertex>();
 		openset = new TreeSet<State>();
 		this.graph = graph;
-		this.start = start;
-		this.goal = goal;
-		this.heuristic = h;
 		mst = this.graph.getMST();
-		State initial = new State(0, heuristic_evaluation(this.start, this.goal), this.start);
+		State initial = new State(0, heuristic_evaluation(options.getSource(), options.getDestination()), options.getSource());
 		openset.add(initial);
 	}
 
@@ -55,15 +51,15 @@ public class A_Star {
 			current = openset.pollFirst();
 			cVertex = current.currentVertex();
 			
-			System.out.println("analizing vertex "+cVertex.getInfo().getName()+" with cost g="+current.getG());
+			/*System.out.println("analizing vertex "+cVertex.getInfo().getName()+" with cost g="+current.getG());
 			System.out.print("openset: ");for( State s : this.openset) {
 				System.out.print(s.currentVertex().getInfo().getName()+"+ ");
 			}System.out.println();
 			System.out.print("closedset: ");for( Vertex v : this.closedset){
 				System.out.print(v.getInfo().getName()+"+ ");
 			}System.out.println();
-			
-			if(cVertex.equals(this.goal))
+			*/
+			if(cVertex.equals(options.getDestination()))
 				return current;
 			this.closedset.add(cVertex);
 			
@@ -74,15 +70,15 @@ public class A_Star {
 				
 				for( Transportation t : e.getTransportations()) {
 					
-					double h = heuristic_evaluation(cVertex, this.goal);
-					State s = new State(current, e.otherVertex(cVertex), e, t, h, this.heuristic);
+					double h = heuristic_evaluation(cVertex, options.getDestination());
+					State s = new State(current, e.otherVertex(cVertex), e, t, h, options.getChosen_heuristic());
 					
-					System.out.println("<neighbor "+s.currentVertex().getInfo().getName()+" "+(s.getG()+s.getH())+">");
+					System.out.println("<neighbor "+s.currentVertex().getInfo().getName()+" g="+s.getG()+ " h=" + s.getH()+" by "+t.toString()+">");
 					
 					if(!openset_contains(s) /*!openset.contains(s)*/)
 						openset.add(s);
 					else {
-						System.out.println("<contains "+s.currentVertex().getInfo().getName()+">");
+						//System.out.println("<contains "+s.currentVertex().getInfo().getName()+">");
 						for( State st : openset) {
 							if(st.equals(s)){
 								if(st.getG() > s.getG()){
@@ -100,15 +96,16 @@ public class A_Star {
 	}
 
 	private double heuristic_evaluation(Vertex v1, Vertex v2){
-		if( v1==null || v2==null || v1.equals(v2)) return 0;//infinity instea 0?
-		if( this.heuristic == Heuristic.DISTANCE)
+		if( v1==null || v2==null || v1.equals(v2)) return 0;//infinity instead 0?
+		if(options.getChosen_heuristic() == Heuristic.DISTANCE ||
+			options.getChosen_heuristic() == Heuristic.TIME ||
+			options.getChosen_heuristic() == Heuristic.PRICE )
 			return heuristic_evaluation_distance(v1,v2);
-		else if( this.heuristic == Heuristic.TIME)
-			return heuristic_evaluation_time(v1,v2);
-		else if( this.heuristic == Heuristic.WALK_DISTANCE)//TODO
+		else if( options.getChosen_heuristic() == Heuristic.WALK_DISTANCE)//TODO
 			return heuristic_evaluation_walk_distance(v1,v2);
-		return heuristic_evaluation_swaps(v1,v2);//TODO SWAPS
-		//return heuristic_evaluation_distance(v1,v2); // distance
+		else if( options.getChosen_heuristic() == Heuristic.SWAPS)
+			return heuristic_evaluation_swaps(v1,v2);//TODO SWAPS
+		return 0;//default
 	}
 	
 	private double heuristic_evaluation_swaps(Vertex v1, Vertex v2) {

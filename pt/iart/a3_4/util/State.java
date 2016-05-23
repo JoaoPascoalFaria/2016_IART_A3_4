@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 
@@ -44,9 +45,11 @@ public class State implements Comparable<State> {
 	public State(State s, Vertex v, Edge e, Transportation t, double h, Heuristic heuristic){
 		// TODO distance or time!? or..
 		if( heuristic == Heuristic.DISTANCE)
-			this.g = s.g + e.getCost(t).getDistance();
+			this.g = s.g + e.getCost(t).getDistance()+e.getCost(t).getTravelTime()/12;
 		else if( heuristic == Heuristic.TIME)
 			this.g = s.g + e.getCost(t).getTravelTime();
+		else if( heuristic == Heuristic.PRICE)
+			this.g = s.g + e.getCost(t).getTravelTime()/20+e.getCost(t).getPrice();//20mins is equivalent to 1€
 		else if( heuristic == Heuristic.WALK_DISTANCE)//TODO
 			this.g = s.g + e.getCost(t).getTravelTime();
 		else//TODO SWAPS
@@ -100,12 +103,29 @@ public class State implements Comparable<State> {
 
 	public void print() {
 		Iterator<Vertex> pathIt = this.path.iterator();
-		System.out.print("Path:\n"+pathIt.next().getInfo().getName());
+		double time=0, distance=0, price=0;
+		Vertex temp = pathIt.next();
+		System.out.print("Lowest "+Options.getInstance().getChosen_heuristic().toString()+
+				" Path:\n"+"FROM\tTO\tTRANSPORT\tTIME\t\tDISTANCE\tPRICE\t\tTOTAL TIME\tTOTAL DISTANCE\tTOTAL PRICE\n"+temp.getInfo().getName());
 		for( Map.Entry<Edge, Transportation> e : this.edgeTransport.entrySet()){
 			Vertex v = pathIt.next();
-			System.out.println(" to "+v.getInfo().getName()+" by "+e.getValue().toString());
+			time += temp.getConnectingEdge(v).getCost(e.getValue()).getTravelTime();
+			distance += temp.getConnectingEdge(v).getCost(e.getValue()).getDistance();
+			price += temp.getConnectingEdge(v).getCost(e.getValue()).getPrice();
+			temp = v;
+			//System.out.println(" to "+v.getInfo().getName()+" by "+e.getValue().toString());
+			System.out.println("\t"+v.getInfo().getName()+"\t"+e.getValue().toString()+
+					"\t\t"+String.format("%02d:%02dh", TimeUnit.MINUTES.toHours((long) temp.getConnectingEdge(v).getCost(e.getValue()).getTravelTime()),(long) temp.getConnectingEdge(v).getCost(e.getValue()).getTravelTime()-TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours((long) temp.getConnectingEdge(v).getCost(e.getValue()).getTravelTime()))) +
+					"\t\t"+String.format("%.2f", temp.getConnectingEdge(v).getCost(e.getValue()).getDistance())+"Km" +
+					"\t\t"+temp.getConnectingEdge(v).getCost(e.getValue()).getPrice()+"€"+
+					"\t\t"+String.format("%02d:%02dh", TimeUnit.MINUTES.toHours((long) time),(long) time-TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours((long) time))) +
+					"\t\t"+String.format("%.2f", distance)+"Km" +
+					"\t\t"+price+"€");
 			if( pathIt.hasNext()) System.out.print(v.getInfo().getName());
 		}
+		System.out.println("total travel time\t"+String.format("%02d:%02dh", TimeUnit.MINUTES.toHours((long) time),(long) time-TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours((long) time))));
+		System.out.println("total distance\t\t"+String.format("%.2f", distance)+"Km");
+		System.out.println("total price\t\t"+price+"€");
 		System.out.println();
 	}
 }

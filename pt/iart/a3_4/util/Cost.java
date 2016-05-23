@@ -38,7 +38,7 @@ public class Cost {
 
 	@Override
 	public String toString() {
-		String s = "{dist "+String.format("%.2f", this.distance)+" time "+String.format("%.2f", this.time)+" price "+String.format("%.2f", this.price);
+		String s = "{dist "+String.format("%.2f", this.distance)+" time "+String.format("%.2f", this.time)+" price "+String.format("%.2f", this.price)+"} ";
 		return s;
 	}
 }

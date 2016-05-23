@@ -1,14 +1,21 @@
 package pt.iart.a3_4.gui;
 
 import pt.iart.a3_4.algorithm.A_Star;
+import pt.iart.a3_4.util.Edge;
 import pt.iart.a3_4.util.Graph;
 import pt.iart.a3_4.util.Heuristic;
 import pt.iart.a3_4.util.Location;
+import pt.iart.a3_4.util.Options;
+import pt.iart.a3_4.util.Transportation;
 import pt.iart.a3_4.util.Vertex;
 
 public class Gui {
 
+	
 	public static void main(String[] args) {
+		
+		Options options = Options.getInstance();
+		
 		// TODO Auto-generated method stub
 		Graph g = new Graph();
 		Vertex v1  = g.addVertex2(new Location("a", 0, 8));
@@ -28,7 +35,8 @@ public class Gui {
 		
 		g.addEdge(v2, v3);
 		g.addEdge(v2, v4);
-		g.addEdge(v2, v5);
+		Edge e = g.addEdge2(v2, v5);
+		e.addTransportationT(Transportation.METRO, 7);//metro
 		g.addEdge(v2, v6);
 		
 		g.addEdge(v3, v4);
@@ -55,7 +63,11 @@ public class Gui {
 		System.out.println("printing graph");
 		g.print();
 		
-		A_Star as = new A_Star(g, v2, v9, Heuristic.TIME);
+		options.setSource(v2);
+		options.setDestination(v9);
+		options.setChosen_heuristic(Heuristic.DISTANCE);
+		
+		A_Star as = new A_Star(g);
 		as.getPath().print();
 	}
 
