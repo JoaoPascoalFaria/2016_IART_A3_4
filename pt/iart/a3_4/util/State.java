@@ -17,6 +17,11 @@ public class State implements Comparable<State> {
 	private LinkedHashSet<Vertex> path;
 	private Vertex lastVertex;// prevents path.toArray()[last]
 	private LinkedHashMap<Edge, Transportation> edgeTransport;
+	private Options options = Options.getInstance();
+	private double total_walked_distance = 0;
+	private int total_swaps = 0;
+	private Transportation previous_transport = null;
+	private double total_price = 0;
 
 	/**
 	 * @description Initialization of States (the very first one)
@@ -42,24 +47,36 @@ public class State implements Comparable<State> {
 	 * @param h this state heuristic value
 	 */
 	@SuppressWarnings("unchecked")
-	public State(State s, Vertex v, Edge e, Transportation t, double h, Heuristic heuristic){
-		// TODO distance or time!? or..
+	public State(State s, Vertex v, Edge e, Transportation t, double h){
+		
+		this.total_walked_distance = s.total_walked_distance + (t==Transportation.WALK ? e.getCost(t).getDistance() : 0);
+		this.total_swaps = s.total_swaps + (t==s.previous_transport||s.previous_transport==null ? 0 : (t==Transportation.WALK ? 0 : 1));
+		this.total_price = s.total_price + e.getCost(t).getPrice();
+		
+		Heuristic heuristic = options.getChosen_heuristic();
 		if( heuristic == Heuristic.DISTANCE)
-			this.g = s.g + e.getCost(t).getDistance()+e.getCost(t).getTravelTime()/12;
+			this.g = s.g + e.getCost(t).getDistance()+e.getCost(t).getTravelTime()/12;//12min is equivalent to 1km
 		else if( heuristic == Heuristic.TIME)
 			this.g = s.g + e.getCost(t).getTravelTime();
 		else if( heuristic == Heuristic.PRICE)
 			this.g = s.g + e.getCost(t).getTravelTime()/20+e.getCost(t).getPrice();//20mins is equivalent to 1€
-		else if( heuristic == Heuristic.WALK_DISTANCE)//TODO
-			this.g = s.g + e.getCost(t).getTravelTime();
-		else//TODO SWAPS
-			this.g = s.g + e.getCost(t).getTravelTime();
+		else if( heuristic == Heuristic.WALK_DISTANCE)
+			this.g = s.g + e.getCost(t).getDistance()+e.getCost(t).getTravelTime()/12+(this.total_walked_distance-s.total_walked_distance)*100;//walking have big cost
+		else if( heuristic == Heuristic.SWAPS)
+			this.g = s.g + e.getCost(t).getDistance()+e.getCost(t).getTravelTime()/12+(this.total_swaps-s.total_swaps)*250;//Swaps have big cost
+		if(options.desireToAvoidTransportation(t))
+			this.g += (this.g - s.g)*100;//Increase this Edge weight if we want to avoid this kind of transportation
+		if(s.total_price < options.getMax_price() && this.total_price > options.getMax_price())
+			this.g += 999999;//allows payments above price if no other path possible.
+		if(s.total_walked_distance < options.getMax_walk_distance() && this.total_walked_distance > options.getMax_walk_distance())
+			this.g += 999999;//allows walking above limit if no other path possible
 		this.h = h;
 		this.path = (LinkedHashSet<Vertex>) s.path.clone();
 		this.edgeTransport = (LinkedHashMap<Edge, Transportation>) s.edgeTransport.clone();
 		this.path.add(v);
 		this.edgeTransport.put(e, t);
 		this.lastVertex = v;
+		this.previous_transport = t;
 	}
 	
 	public double getG() {
@@ -123,9 +140,11 @@ public class State implements Comparable<State> {
 					"\t\t"+price+"€");
 			if( pathIt.hasNext()) System.out.print(v.getInfo().getName());
 		}
-		System.out.println("total travel time\t"+String.format("%02d:%02dh", TimeUnit.MINUTES.toHours((long) time),(long) time-TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours((long) time))));
-		System.out.println("total distance\t\t"+String.format("%.2f", distance)+"Km");
-		System.out.println("total price\t\t"+price+"€");
+		System.out.println("Total travel time\t"+String.format("%02d:%02dh", TimeUnit.MINUTES.toHours((long) time),(long) time-TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours((long) time))));
+		System.out.println("Total distance\t\t"+String.format("%.2f", distance)+"Km");
+		System.out.println("Total distance by foot\t"+String.format("%.2f", this.total_walked_distance)+"Km");
+		System.out.println("Total price\t\t"+this.total_price+"€");
+		System.out.println("Total number of swaps\t"+this.total_swaps);
 		System.out.println();
 	}
 }

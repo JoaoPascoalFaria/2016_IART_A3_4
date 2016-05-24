@@ -71,7 +71,7 @@ public class A_Star {
 				for( Transportation t : e.getTransportations()) {
 					
 					double h = heuristic_evaluation(cVertex, options.getDestination());
-					State s = new State(current, e.otherVertex(cVertex), e, t, h, options.getChosen_heuristic());
+					State s = new State(current, e.otherVertex(cVertex), e, t, h);
 					
 					System.out.println("<neighbor "+s.currentVertex().getInfo().getName()+" g="+s.getG()+ " h=" + s.getH()+" by "+t.toString()+">");
 					
@@ -97,7 +97,9 @@ public class A_Star {
 
 	private double heuristic_evaluation(Vertex v1, Vertex v2){
 		if( v1==null || v2==null || v1.equals(v2)) return 0;//infinity instead 0?
-		if(options.getChosen_heuristic() == Heuristic.DISTANCE ||
+		if(options.getChosen_heuristic() == Heuristic.TIME) return heuristic_evaluation_time(v1,v2);
+		return heuristic_evaluation_distance(v1,v2);
+		/*if(options.getChosen_heuristic() == Heuristic.DISTANCE ||
 			options.getChosen_heuristic() == Heuristic.TIME ||
 			options.getChosen_heuristic() == Heuristic.PRICE )
 			return heuristic_evaluation_distance(v1,v2);
@@ -105,7 +107,7 @@ public class A_Star {
 			return heuristic_evaluation_walk_distance(v1,v2);
 		else if( options.getChosen_heuristic() == Heuristic.SWAPS)
 			return heuristic_evaluation_swaps(v1,v2);//TODO SWAPS
-		return 0;//default
+		return 0;//default*/
 	}
 	
 	private double heuristic_evaluation_swaps(Vertex v1, Vertex v2) {

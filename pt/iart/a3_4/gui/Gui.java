@@ -36,7 +36,8 @@ public class Gui {
 		g.addEdge(v2, v3);
 		g.addEdge(v2, v4);
 		Edge e = g.addEdge2(v2, v5);
-		e.addTransportationT(Transportation.METRO, 7);//metro
+		//e.addTransportationT(Transportation.METRO, 7);//metro
+		e.addTransportationTP(Transportation.METRO, 7, 1);//metro
 		g.addEdge(v2, v6);
 		
 		g.addEdge(v3, v4);
@@ -66,6 +67,12 @@ public class Gui {
 		options.setSource(v2);
 		options.setDestination(v9);
 		options.setChosen_heuristic(Heuristic.DISTANCE);
+		//options.setChosen_heuristic(Heuristic.PRICE);
+		//options.setChosen_heuristic(Heuristic.SWAPS);
+		//options.setChosen_heuristic(Heuristic.TIME);
+		//options.setChosen_heuristic(Heuristic.WALK_DISTANCE);
+		//options.avoidTransportation(Transportation.METRO, true);
+		//options.avoidTransportation(Transportation.WALK, true);
 		
 		A_Star as = new A_Star(g);
 		as.getPath().print();
