@@ -79,6 +79,8 @@ public class Gui {
 		Edge dragao_aeroporto = g.addEdge2(dragao, aeroporto);
 		Edge hospital_aeroporto = g.addEdge2(hospital, aeroporto);
 		Edge forum_aeroporto = g.addEdge2(forum_maia, aeroporto);
+		Edge senhor_aeroporto = g.addEdge2(senhor_matosinhos, aeroporto);
+		
 		
 		// metro
 		senhora_aeroporto.addTransportationTP(metro, 14, 1.5);
@@ -101,26 +103,17 @@ public class Gui {
 		
 
 		// bus
-		senhora_aeroporto.addTransportationTP(metro, 14, 1.5);
 		forum_aeroporto.addTransportationTP(bus, 17, 1.2);
-		hospital_aeroporto.addTransportationTP(bus, 50, 1.5);
-		senhora_senhor.addTransportationTP(metro, 19, 1.2);
-		senhora_forum.addTransportationTP(metro, 14, 1.2);
-		senhora_dragao.addTransportationTP(metro, 22, 1.2);
-		trindade_senhora.addTransportationTP(metro, 13, 1.2);
-		trindade_hospital.addTransportationTP(metro, 12, 1.2);
-		trindade_dragao.addTransportationTP(metro, 10, 1.2);
-		trindade_gaia.addTransportationTP(metro, 9, 1.2);
-		trindade_ovidio.addTransportationTP(metro, 14, 1.2);
+		hospital_aeroporto.addTransportationTP(bus, 45, 1.5);
+		senhora_senhor.addTransportationTP(bus, 19, 1.2);
+		trindade_hospital.addTransportationTP(bus, 20, 1.2);
+		trindade_dragao.addTransportationTP(bus, 12, 1.2);
+		trindade_gaia.addTransportationTP(bus, 17, 1.2);
+		trindade_ovidio.addTransportationTP(bus, 27, 1.2);
 		trindade_aeroporto.addTransportationTP(bus, 28, 1.85);
-		trindade_senhor.addTransportationTP(metro, 33, 1.5);
-		trindade_forum.addTransportationTP(bus, 25, 1.5);
-		gaia_ovidio.addTransportationTP(metro, 5, 1.2);
-		gaia_hospital.addTransportationTP(metro, 22, 1.2);
-		ovidio_hospital.addTransportationTP(metro, 27, 1.2);
-		dragao_senhor.addTransportationTP(metro, 41, 1.5);
-		dragao_aeroporto.addTransportationTP(metro, 35, 1.85);
-		
+		trindade_forum.addTransportationTP(bus, 36, 1.5);
+		gaia_ovidio.addTransportationTP(bus, 11, 1.2);
+		senhor_aeroporto.addTransportationTP(bus, 22, 1.5);
 		
 		options.setSource(gaia);
 		options.setDestination(forum_maia);

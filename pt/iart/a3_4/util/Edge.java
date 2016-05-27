@@ -146,6 +146,10 @@ public class Edge {
 		return edgeTime;
 	}
 	
+	public void removeTransportation(Transportation t){
+		if(this.costs.containsKey(t)) this.costs.remove(t);
+	}
+	
 	public Vertex otherVertex(Vertex v) {
 		return (v.equals(v1)) ? v2 : v1;
 	}
