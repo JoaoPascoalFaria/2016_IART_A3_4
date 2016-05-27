@@ -64,11 +64,12 @@ public class State implements Comparable<State> {
 			this.g = s.g + e.getCost(t).getDistance()+e.getCost(t).getTravelTime()/12+(this.total_walked_distance-s.total_walked_distance)*100;//walking have big cost
 		else if( heuristic == Heuristic.SWAPS)
 			this.g = s.g + e.getCost(t).getDistance()+e.getCost(t).getTravelTime()/12+(this.total_swaps-s.total_swaps)*250;//Swaps have big cost
+		
 		if(options.desireToAvoidTransportation(t))
 			this.g += (this.g - s.g)*100;//Increase this Edge weight if we want to avoid this kind of transportation
-		if(s.total_price < options.getMax_price() && this.total_price > options.getMax_price())
+		if(s.total_price <= options.getMax_price() && this.total_price > options.getMax_price())
 			this.g += 999999;//allows payments above price if no other path possible.
-		if(s.total_walked_distance < options.getMax_walk_distance() && this.total_walked_distance > options.getMax_walk_distance())
+		if(s.total_walked_distance <= options.getMax_walk_distance() && this.total_walked_distance > options.getMax_walk_distance())
 			this.g += 999999;//allows walking above limit if no other path possible
 		this.h = h;
 		this.path = (LinkedHashSet<Vertex>) s.path.clone();
@@ -105,9 +106,10 @@ public class State implements Comparable<State> {
 		double otherF = s.g+s.h;
 		if(myF < otherF) return -1;
 		if(myF > otherF) return 1;
-		/*if(this.equals(s)) return 0;
-		return 1;*/
-		return 0;
+		//sometimes for some magical reason they end up with the exact same f, need to prevent set from rejecting them
+		if(this.equals(s)) return 0;
+		return 1;/**/
+		/*return 0;/**/
 	}
 
 	@Override
@@ -123,27 +125,30 @@ public class State implements Comparable<State> {
 		double time=0, distance=0, price=0;
 		Vertex temp = pathIt.next();
 		System.out.print("Lowest "+Options.getInstance().getChosen_heuristic().toString()+
-				" Path:\n"+"FROM\tTO\tTRANSPORT\tTIME\t\tDISTANCE\tPRICE\t\tTOTAL TIME\tTOTAL DISTANCE\tTOTAL PRICE\n"+temp.getInfo().getName());
+				" Path:\n"+String.format("%-20s %-20s", "FROM","TO")+"\tTRANSPORT\tTIME\t\tDISTANCE\tPRICE\t\tTOTAL TIME\tTOTAL DISTANCE\tTOTAL PRICE\n");
 		for( Map.Entry<Edge, Transportation> e : this.edgeTransport.entrySet()){
 			Vertex v = pathIt.next();
 			time += temp.getConnectingEdge(v).getCost(e.getValue()).getTravelTime();
 			distance += temp.getConnectingEdge(v).getCost(e.getValue()).getDistance();
 			price += temp.getConnectingEdge(v).getCost(e.getValue()).getPrice();
-			temp = v;
 			//System.out.println(" to "+v.getInfo().getName()+" by "+e.getValue().toString());
-			System.out.println("\t"+v.getInfo().getName()+"\t"+e.getValue().toString()+
+			System.out.print(
+					String.format("%-20s %-20s", temp.getInfo().getName(), v.getInfo().getName())
+			);
+			temp = v;
+			System.out.println("\t"+e.getValue().toString()+
 					"\t\t"+String.format("%02d:%02dh", TimeUnit.MINUTES.toHours((long) temp.getConnectingEdge(v).getCost(e.getValue()).getTravelTime()),(long) temp.getConnectingEdge(v).getCost(e.getValue()).getTravelTime()-TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours((long) temp.getConnectingEdge(v).getCost(e.getValue()).getTravelTime()))) +
 					"\t\t"+String.format("%.2f", temp.getConnectingEdge(v).getCost(e.getValue()).getDistance())+"Km" +
-					"\t\t"+temp.getConnectingEdge(v).getCost(e.getValue()).getPrice()+"€"+
+					"\t\t"+String.format("%.2f", temp.getConnectingEdge(v).getCost(e.getValue()).getPrice())+"€"+
 					"\t\t"+String.format("%02d:%02dh", TimeUnit.MINUTES.toHours((long) time),(long) time-TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours((long) time))) +
 					"\t\t"+String.format("%.2f", distance)+"Km" +
-					"\t\t"+price+"€");
-			if( pathIt.hasNext()) System.out.print(v.getInfo().getName());
+					"\t\t"+String.format("%.2f", price)+"€");
+			//if( pathIt.hasNext()) System.out.print(v.getInfo().getName());
 		}
 		System.out.println("Total travel time\t"+String.format("%02d:%02dh", TimeUnit.MINUTES.toHours((long) time),(long) time-TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours((long) time))));
 		System.out.println("Total distance\t\t"+String.format("%.2f", distance)+"Km");
 		System.out.println("Total distance by foot\t"+String.format("%.2f", this.total_walked_distance)+"Km");
-		System.out.println("Total price\t\t"+this.total_price+"€");
+		System.out.println("Total price\t\t"+String.format("%.2f", this.total_price)+"€");
 		System.out.println("Total number of swaps\t"+this.total_swaps);
 		System.out.println();
 	}

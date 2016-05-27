@@ -3,13 +3,7 @@ package pt.iart.a3_4.algorithm;
 import java.util.HashSet;
 import java.util.TreeSet;
 
-import pt.iart.a3_4.util.Edge;
-import pt.iart.a3_4.util.Graph;
-import pt.iart.a3_4.util.Heuristic;
-import pt.iart.a3_4.util.Options;
-import pt.iart.a3_4.util.State;
-import pt.iart.a3_4.util.Transportation;
-import pt.iart.a3_4.util.Vertex;
+import pt.iart.a3_4.util.*;
 
 public class A_Star {
 	
@@ -84,6 +78,12 @@ public class A_Star {
 								if(st.getG() > s.getG()){
 									openset.remove(st);
 									openset.add(s);
+									if(!openset_contains(s)){
+										System.err.println("Item failed to rejoin openset");
+										System.err.print("openset: ");for( State s1 : this.openset) {
+											System.err.print(s1.currentVertex().getInfo().getName()+" + ");
+										}System.err.println();
+									}
 								}
 								break;
 							}
@@ -92,12 +92,20 @@ public class A_Star {
 				}
 			}
 		}
+		System.err.println("A* FAILED");
+		System.err.print("openset: ");for( State s : this.openset) {
+			System.err.print(s.currentVertex().getInfo().getName()+" + ");
+		}System.err.println();
+		System.err.print("closedset: ");for( Vertex v : this.closedset){
+			System.err.print(v.getInfo().getName()+" + ");
+		}System.err.println();
 		return null;
 	}
 
 	private double heuristic_evaluation(Vertex v1, Vertex v2){
 		if( v1==null || v2==null || v1.equals(v2)) return 0;//infinity instead 0?
-		if(options.getChosen_heuristic() == Heuristic.TIME) return heuristic_evaluation_time(v1,v2);
+		if(options.getChosen_heuristic() == Heuristic.TIME || options.getChosen_heuristic() == Heuristic.TIME)
+			return heuristic_evaluation_time(v1,v2);
 		return heuristic_evaluation_distance(v1,v2);
 		/*if(options.getChosen_heuristic() == Heuristic.DISTANCE ||
 			options.getChosen_heuristic() == Heuristic.TIME ||
@@ -123,10 +131,12 @@ public class A_Star {
 	private double heuristic_evaluation_time(Vertex v1, Vertex v2) {
 		// traint at 200 Km/h nothing should be faster than train
 		return Math.sqrt( Math.pow(v2.getInfo().getX() - v1.getInfo().getX(), 2) + Math.pow(v2.getInfo().getY() - v1.getInfo().getY(), 2))/200*60;
+		//return DistanceCalculator.distance(v1.getInfo().getX(), v1.getInfo().getY(), v2.getInfo().getX(), v2.getInfo().getY(), "k")/200*60;
 	}
 	
 	private double heuristic_evaluation_distance(Vertex v1, Vertex v2) {
 		return Math.sqrt( Math.pow(v2.getInfo().getX() - v1.getInfo().getX(), 2) + Math.pow(v2.getInfo().getY() - v1.getInfo().getY(), 2));
+		//return DistanceCalculator.distance(v1.getInfo().getX(), v1.getInfo().getY(), v2.getInfo().getX(), v2.getInfo().getY(), "k");
 	}
 	
 	/**

@@ -5,23 +5,25 @@ import java.util.HashSet;
 public class Location {
 	
 	private String name;
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	private HashSet<String> tags;
 	
-	public Location(String name, int x, int y) {
+	public Location(String name, double x, double y) {
 		this.name = name;
-		this.x = x;
-		this.y = y;
+		this.x = x;//latitude  decimal degrees
+		this.y = y;//longitude decimal degrees
 		this.tags = new HashSet<String>();
 	}
 
-	public int getX() {
-		return x;
+	public double getX() {
+		return x/0.009;
+		//return x;
 	}
 
-	public int getY() {
-		return y;
+	public double getY() {
+		return y/0.009;
+		//return y;
 	}
 
 	public String getName() {

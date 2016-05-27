@@ -161,6 +161,7 @@ public class Edge {
 	// Util
 	public double getLength() {
 		return Math.sqrt( Math.pow(v2.getInfo().getX() - v1.getInfo().getX(), 2) + Math.pow(v2.getInfo().getY() - v1.getInfo().getY(), 2));
+		//return DistanceCalculator.distance(v1.getInfo().getX(), v1.getInfo().getY(), v2.getInfo().getX(), v2.getInfo().getY(), "k");
 	}
 	
 	public void print() {
