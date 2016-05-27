@@ -135,7 +135,6 @@ public class State implements Comparable<State> {
 			System.out.print(
 					String.format("%-20s %-20s", temp.getInfo().getName(), v.getInfo().getName())
 			);
-			temp = v;
 			System.out.println("\t"+e.getValue().toString()+
 					"\t\t"+String.format("%02d:%02dh", TimeUnit.MINUTES.toHours((long) temp.getConnectingEdge(v).getCost(e.getValue()).getTravelTime()),(long) temp.getConnectingEdge(v).getCost(e.getValue()).getTravelTime()-TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours((long) temp.getConnectingEdge(v).getCost(e.getValue()).getTravelTime()))) +
 					"\t\t"+String.format("%.2f", temp.getConnectingEdge(v).getCost(e.getValue()).getDistance())+"Km" +
@@ -143,6 +142,7 @@ public class State implements Comparable<State> {
 					"\t\t"+String.format("%02d:%02dh", TimeUnit.MINUTES.toHours((long) time),(long) time-TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours((long) time))) +
 					"\t\t"+String.format("%.2f", distance)+"Km" +
 					"\t\t"+String.format("%.2f", price)+"€");
+			temp = v;
 			//if( pathIt.hasNext()) System.out.print(v.getInfo().getName());
 		}
 		System.out.println("Total travel time\t"+String.format("%02d:%02dh", TimeUnit.MINUTES.toHours((long) time),(long) time-TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours((long) time))));
