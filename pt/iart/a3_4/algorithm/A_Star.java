@@ -103,29 +103,19 @@ public class A_Star {
 	}
 
 	private double heuristic_evaluation(Vertex v1, Vertex v2){
-		if( v1==null || v2==null || v1.equals(v2)) return 0;//infinity instead 0?
-		if(options.getChosen_heuristic() == Heuristic.TIME || options.getChosen_heuristic() == Heuristic.TIME)
+		if( v1==null || v2==null || v1.equals(v2)) return 999999;
+		/*if(options.getChosen_heuristic() == Heuristic.TIME || options.getChosen_heuristic() == Heuristic.PRICE)
 			return heuristic_evaluation_time(v1,v2);
-		return heuristic_evaluation_distance(v1,v2);
-		/*if(options.getChosen_heuristic() == Heuristic.DISTANCE ||
-			options.getChosen_heuristic() == Heuristic.TIME ||
-			options.getChosen_heuristic() == Heuristic.PRICE )
-			return heuristic_evaluation_distance(v1,v2);
-		else if( options.getChosen_heuristic() == Heuristic.WALK_DISTANCE)//TODO
-			return heuristic_evaluation_walk_distance(v1,v2);
-		else if( options.getChosen_heuristic() == Heuristic.SWAPS)
-			return heuristic_evaluation_swaps(v1,v2);//TODO SWAPS
-		return 0;//default*/
-	}
-	
-	private double heuristic_evaluation_swaps(Vertex v1, Vertex v2) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	private double heuristic_evaluation_walk_distance(Vertex v1, Vertex v2) {
-		// TODO Auto-generated method stub
-		return 0;
+		return heuristic_evaluation_distance(v1,v2);*/
+		Heuristic heuristic = options.getChosen_heuristic();
+		if( heuristic == Heuristic.DISTANCE || heuristic == Heuristic.WALK_DISTANCE || heuristic == Heuristic.SWAPS)
+			return 0.5*heuristic_evaluation_distance(v1,v2) + 0.5*heuristic_evaluation_time(v1,v2)/12;//12min is equivalent to 1km
+		else if( heuristic == Heuristic.TIME)
+			return heuristic_evaluation_time(v1,v2);
+		else if( heuristic == Heuristic.PRICE)
+			return 0.5*heuristic_evaluation_time(v1,v2)/20;//20mins is equivalent to 1€
+		System.err.println("heuristic failed");
+		return 999999;
 	}
 
 	private double heuristic_evaluation_time(Vertex v1, Vertex v2) {
@@ -142,6 +132,7 @@ public class A_Star {
 	/**
 	 * not good. overestimates. could be used if we needed to pass trough some intermediate points
 	 */
+	@SuppressWarnings("unused")
 	private double heuristic_evaluation_mst(Vertex v1, Vertex v2) {
 		Vertex v12=null;
 		Vertex v22=null;

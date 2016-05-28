@@ -55,15 +55,15 @@ public class State implements Comparable<State> {
 		
 		Heuristic heuristic = options.getChosen_heuristic();
 		if( heuristic == Heuristic.DISTANCE)
-			this.g = s.g + e.getCost(t).getDistance()+e.getCost(t).getTravelTime()/12;//12min is equivalent to 1km
+			this.g = s.g + 0.5*e.getCost(t).getDistance() + 0.5*e.getCost(t).getTravelTime()/12;//12min is equivalent to 1km
 		else if( heuristic == Heuristic.TIME)
 			this.g = s.g + e.getCost(t).getTravelTime();
 		else if( heuristic == Heuristic.PRICE)
-			this.g = s.g + e.getCost(t).getTravelTime()/20+e.getCost(t).getPrice();//20mins is equivalent to 1€
+			this.g = s.g + 0.5*e.getCost(t).getTravelTime()/20 + 0.5*e.getCost(t).getPrice();//20mins is equivalent to 1€
 		else if( heuristic == Heuristic.WALK_DISTANCE)
-			this.g = s.g + e.getCost(t).getDistance()+e.getCost(t).getTravelTime()/12+(this.total_walked_distance-s.total_walked_distance)*100;//walking have big cost
+			this.g = s.g + 0.5*e.getCost(t).getDistance() + 0.5*e.getCost(t).getTravelTime()/12 + (this.total_walked_distance-s.total_walked_distance)*100;//walking have big cost
 		else if( heuristic == Heuristic.SWAPS)
-			this.g = s.g + e.getCost(t).getDistance()+e.getCost(t).getTravelTime()/12+(this.total_swaps-s.total_swaps)*250;//Swaps have big cost
+			this.g = s.g + 0.5*e.getCost(t).getDistance() + 0.5*e.getCost(t).getTravelTime()/12 + (this.total_swaps-s.total_swaps)*250;//Swaps have big cost
 		
 		if(options.desireToAvoidTransportation(t))
 			this.g += (this.g - s.g)*100;//Increase this Edge weight if we want to avoid this kind of transportation
