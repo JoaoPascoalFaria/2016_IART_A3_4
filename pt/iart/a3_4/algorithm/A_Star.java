@@ -67,7 +67,7 @@ public class A_Star {
 					double h = heuristic_evaluation(cVertex, options.getDestination());
 					State s = new State(current, e.otherVertex(cVertex), e, t, h);
 					
-					System.out.println("<neighbor "+s.currentVertex().getInfo().getName()+" g="+s.getG()+ " h=" + s.getH()+" by "+t.toString()+">");
+					//System.out.println("<neighbor "+s.currentVertex().getInfo().getName()+" g="+s.getG()+ " h=" + s.getH()+" by "+t.toString()+">");
 					
 					if(!openset_contains(s) /*!openset.contains(s)*/)
 						openset.add(s);

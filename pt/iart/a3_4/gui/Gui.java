@@ -1,6 +1,8 @@
 package pt.iart.a3_4.gui;
 
 import pt.iart.a3_4.algorithm.A_Star;
+import pt.iart.a3_4.algorithm.BFS;
+import pt.iart.a3_4.algorithm.DFS;
 import pt.iart.a3_4.util.Edge;
 import pt.iart.a3_4.util.Graph;
 import pt.iart.a3_4.util.Heuristic;
@@ -38,8 +40,17 @@ public class Gui {
 		State result = as.getPath();
 		System.out.println("Printing Result");
 		result.print();
+		/*System.out.println("Running DFS");
+		result = DFS.runDFS();
+		System.out.println("Printing Result");
+		result.print();
+		System.out.println("Running BFS");
+		result = BFS.runBFS();
+		System.out.println("Printing Result");
+		result.print();*/
 	}
 	
+	@SuppressWarnings("unused")
 	private static Graph createGraph(){
 		
 		Graph g = new Graph();
