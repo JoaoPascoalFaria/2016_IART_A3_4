@@ -7,6 +7,7 @@ public class Edge {
 
 	private Vertex v1, v2;
 	private HashMap<Transportation, Cost> costs;
+	private static boolean addWalkingByDefault = true;
 	
 	/**
 	 * 
@@ -35,8 +36,10 @@ public class Edge {
 		this.v1 = v1;
 		this.v2 = v2;
 		
-		Cost c = new Cost(getLength(), getLength()/5*60, 0);
-		costs.put(Transportation.WALK, c);
+		if(addWalkingByDefault){
+			Cost c = new Cost(getLength(), getLength()/5*60, 0);
+			costs.put(Transportation.WALK, c);
+		}
 		
 		v1.addEdge(this);
 		v2.addEdge(this);
@@ -57,6 +60,10 @@ public class Edge {
 		v2.addEdge(this);
 		v1.addNeighbor(v2);
 		v2.addNeighbor(v1);
+	}
+	
+	public static void setWalkingByDefault(boolean bool){
+		addWalkingByDefault = bool;
 	}
 
 	public Cost getCost(Transportation t) {

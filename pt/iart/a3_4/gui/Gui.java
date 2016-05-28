@@ -45,7 +45,6 @@ public class Gui {
 		Graph g = new Graph();
 
 		Transportation metro = Transportation.METRO;
-		Transportation boat = Transportation.BOAT;
 		Transportation bus = Transportation.BUS;
 		Transportation train = Transportation.TRAIN;
 		Transportation walk = Transportation.WALK;
@@ -60,17 +59,17 @@ public class Gui {
 		Vertex dragao = g.addVertex2(new Location("Estádio do Dragão", 41.161277, -8.581477));
 		Vertex gaia = g.addVertex2(new Location("Câmara de Gaia", 41.129863, -8.606131));
 		Vertex ovidio = g.addVertex2(new Location("Santo Ovidio", 41.115500, -8.606468));
-		
 		//bus
 		Vertex forum_maia_b = g.addVertex2(new Location("Maia", 41.232805, -8.623769));
 		Vertex dragao_b = g.addVertex2(new Location("Estádio do Dragão", 41.158883, -8.582854));
 		Vertex gaia_b = g.addVertex2(new Location("Câmara de Gaia", 41.130332, -8.606570));
+		Vertex ermesinde_b = g.addVertex2(new Location("Ermesinde", 41.215894, -8.552604));
+		//train
+		//to simplify, câmara de gaia and estádio do dragão metro stations replace general torres and campanha respectively
+		Vertex ermesinde_t = g.addVertex2(new Location("Ermesinde", 41.216927, -8.553934));
 		
-		//comboio
-		Vertex forum_maia_b = g.addVertex2(new Location("Maia", 41.232805, -8.623769));
-		Vertex dragao_b = g.addVertex2(new Location("Estádio do Dragão", 41.158883, -8.582854));
-		Vertex gaia_b = g.addVertex2(new Location("Câmara de Gaia", 41.130332, -8.606570));
-		
+		Edge.setWalkingByDefault(false);
+		//metro
 		Edge senhora_aeroporto = g.addEdge2(senhora_hora, aeroporto);
 		Edge senhora_senhor = g.addEdge2(senhora_hora, senhor_matosinhos);
 		Edge senhora_forum = g.addEdge2(senhora_hora, forum_maia);
@@ -88,33 +87,26 @@ public class Gui {
 		Edge ovidio_hospital = g.addEdge2(ovidio, hospital);
 		Edge dragao_senhor = g.addEdge2(dragao, senhor_matosinhos);
 		Edge dragao_aeroporto = g.addEdge2(dragao, aeroporto);
+		//bus
+		Edge trindade_forum_b = g.addEdge2(trindade, forum_maia_b);
+		Edge trindade_dragao_b = g.addEdge2(trindade, dragao_b);
+		Edge trindade_gaia_b = g.addEdge2(trindade, gaia_b);
+		Edge gaia_ovidio_b = g.addEdge2(gaia_b, ovidio);
 		Edge hospital_aeroporto = g.addEdge2(hospital, aeroporto);
-		Edge forum_aeroporto = g.addEdge2(forum_maia, aeroporto);
+		Edge forum_aeroporto = g.addEdge2(forum_maia_b, aeroporto);
 		Edge senhor_aeroporto = g.addEdge2(senhor_matosinhos, aeroporto);
-		
-		
-		// remover caminho a pé
-		senhora_aeroporto.removeTransportation(walk);
-		senhora_senhor.removeTransportation(walk);
-		senhora_forum.removeTransportation(walk);
-		senhora_dragao.removeTransportation(walk);
-		trindade_senhora.removeTransportation(walk);
-		trindade_hospital.removeTransportation(walk);
-		trindade_dragao.removeTransportation(walk);
-		trindade_gaia.removeTransportation(walk);
-		trindade_ovidio.removeTransportation(walk);
-		trindade_aeroporto.removeTransportation(walk);
-		trindade_senhor.removeTransportation(walk);
-		trindade_forum.removeTransportation(walk);
-		gaia_ovidio.removeTransportation(walk);
-		gaia_hospital.removeTransportation(walk);
-		ovidio_hospital.removeTransportation(walk);
-		dragao_senhor.removeTransportation(walk);
-		dragao_aeroporto.removeTransportation(walk);
-		hospital_aeroporto.removeTransportation(walk);
-		forum_aeroporto.removeTransportation(walk);
-		senhor_aeroporto.removeTransportation(walk);
-		
+		Edge trindade_ermesinde = g.addEdge2(trindade, ermesinde_b);
+		Edge hospital_ermesinde = g.addEdge2(hospital, ermesinde_b);
+		//train
+		Edge gaia_dragao = g.addEdge2(gaia, dragao);
+		Edge gaia_ermesinde = g.addEdge2(gaia, ermesinde_t);
+		Edge dragao_ermesinde = g.addEdge2(dragao, ermesinde_t);
+		//walking
+		Edge.setWalkingByDefault(true);
+		Edge forum_forum_b = g.addEdge2(forum_maia_b, forum_maia);
+		Edge dragao_dragao_b = g.addEdge2(dragao, dragao_b);
+		Edge gaia_gaia_b = g.addEdge2(gaia, gaia_b);
+		Edge ermesinde_t_ermesinde_b = g.addEdge2(ermesinde_t, ermesinde_b);
 		
 		// metro
 		senhora_aeroporto.addTransportationTP(metro, 14, 1.5);
@@ -134,20 +126,24 @@ public class Gui {
 		ovidio_hospital.addTransportationTP(metro, 27, 1.2);
 		dragao_senhor.addTransportationTP(metro, 41, 1.5);
 		dragao_aeroporto.addTransportationTP(metro, 35, 1.85);
-		
-
 		// bus
 		forum_aeroporto.addTransportationTP(bus, 17, 1.2);
 		hospital_aeroporto.addTransportationTP(bus, 50, 1.5);
 		senhor_aeroporto.addTransportationTP(bus, 21, 1.5);
+		trindade_ermesinde.addTransportationTP(bus, 34, 1.5);
+		hospital_ermesinde.addTransportationTP(bus, 25, 1.2);
 		senhora_senhor.addTransportationTP(bus, 19, 1.2);
 		trindade_hospital.addTransportationTP(bus, 20, 1.2);
-		trindade_dragao.addTransportationTP(bus, 12, 1.2);
-		trindade_gaia.addTransportationTP(bus, 17, 1.2);
+		trindade_dragao_b.addTransportationTP(bus, 12, 1.2);
+		trindade_gaia_b.addTransportationTP(bus, 17, 1.2);
 		trindade_ovidio.addTransportationTP(bus, 27, 1.2);
 		trindade_aeroporto.addTransportationTP(bus, 28, 1.85);
-		trindade_forum.addTransportationTP(bus, 36, 1.5);
-		gaia_ovidio.addTransportationTP(bus, 11, 1.2);
+		trindade_forum_b.addTransportationTP(bus, 36, 1.5);
+		gaia_ovidio_b.addTransportationTP(bus, 11, 1.2);
+		//train
+		dragao_ermesinde.addTransportationTP(train, 11, 1.5);
+		gaia_ermesinde.addTransportationTP(train, 15, 1.5);
+		gaia_dragao.addTransportationTP(train, 4, 1.2);
 		
 		options.setSource(gaia);
 		options.setDestination(forum_maia);
