@@ -33,21 +33,31 @@ public class Gui {
 		//options.avoidTransportation(Transportation.METRO, true);
 		//options.avoidTransportation(Transportation.WALK, true);
 		//options.setMax_price(0);
-
-		System.out.println("Initializing A*");
+		
+		long startTime, endTime;
+		
+		System.out.println("\nInitializing A*");
 		A_Star as = new A_Star(g);
 		System.out.println("Running A*");
+		startTime = System.nanoTime();
 		State result = as.getPath();
-		System.out.println("Printing Result");
+		endTime = System.nanoTime();
+		System.out.println("A* took "+String.format("%.9f", (endTime-startTime)/1000000000f)+" seconds to execute\nPrinting Result");
 		result.print();
-		/*System.out.println("Running DFS");
+		
+		System.out.println("Running DFS");
+		startTime = System.nanoTime();
 		result = DFS.runDFS();
-		System.out.println("Printing Result");
+		endTime = System.nanoTime();
+		System.out.println("DFS took "+String.format("%.9f", (endTime-startTime)/1000000000f)+" seconds to execute\nPrinting Result");
 		result.print();
+		
 		System.out.println("Running BFS");
+		startTime = System.nanoTime();
 		result = BFS.runBFS();
-		System.out.println("Printing Result");
-		result.print();*/
+		endTime = System.nanoTime();
+		System.out.println("BFS took "+String.format("%.9f", (endTime-startTime)/1000000000f)+" seconds to execute\nPrinting Result");
+		result.print();
 	}
 	
 	@SuppressWarnings("unused")
