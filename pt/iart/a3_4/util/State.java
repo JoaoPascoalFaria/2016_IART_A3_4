@@ -74,7 +74,7 @@ public class State implements Comparable<State> {
 		this.h = h;
 		this.path = (LinkedHashSet<Vertex>) s.path.clone();
 		this.edgeTransport = (LinkedHashMap<Edge, Transportation>) s.edgeTransport.clone();
-		this.path.add(v);
+		boolean test = this.path.add(v); if(!test || this.edgeTransport.containsKey(e)) this.g=-1;
 		this.edgeTransport.put(e, t);
 		this.lastVertex = v;
 		this.previous_transport = t;
@@ -117,7 +117,17 @@ public class State implements Comparable<State> {
 		State s = (State) obj;
 		//return this.g==s.g && this.h==s.h && this.path.equals(s.path) && this.edgeTransport.equals(s.edgeTransport);
 		//talvez funcione assim
-		return this.lastVertex.equals(s.lastVertex);
+		//return this.lastVertex.equals(s.lastVertex);
+		if( this.lastVertex.equals(s.lastVertex)){
+			if(this.total_walked_distance != s.total_walked_distance) return false;
+			if(this.total_swaps != s.total_swaps) return false;
+			for( Transportation t : this.edgeTransport.values()){
+				if(!s.edgeTransport.containsValue(t)) return true;
+			}
+			//if(!this.edgeTransport.values().equals(s.edgeTransport.values())) return false;
+			return false;
+		}
+		return false;
 	}
 
 	public void print() {

@@ -25,15 +25,6 @@ public class Gui {
 		System.out.println("Printing Graph");
 		g.print();
 		
-		options.setChosen_heuristic(Heuristic.TIME);
-		//options.setChosen_heuristic(Heuristic.PRICE);
-		//options.setChosen_heuristic(Heuristic.SWAPS);
-		//options.setChosen_heuristic(Heuristic.TIME);
-		//options.setChosen_heuristic(Heuristic.WALK_DISTANCE);
-		//options.avoidTransportation(Transportation.METRO, true);
-		//options.avoidTransportation(Transportation.WALK, true);
-		//options.setMax_price(0);
-		
 		long startTime, endTime;
 		
 		System.out.println("\nInitializing A*");
@@ -44,7 +35,7 @@ public class Gui {
 		endTime = System.nanoTime();
 		System.out.println("A* took "+String.format("%.9f", (endTime-startTime)/1000000000f)+" seconds to execute\nPrinting Result");
 		result.print();
-		
+		/*
 		System.out.println("Running DFS");
 		startTime = System.nanoTime();
 		result = DFS.runDFS();
@@ -57,7 +48,7 @@ public class Gui {
 		result = BFS.runBFS();
 		endTime = System.nanoTime();
 		System.out.println("BFS took "+String.format("%.9f", (endTime-startTime)/1000000000f)+" seconds to execute\nPrinting Result");
-		result.print();
+		result.print();/**/
 	}
 	
 	@SuppressWarnings("unused")
@@ -81,13 +72,13 @@ public class Gui {
 		Vertex gaia = g.addVertex2(new Location("Câmara de Gaia", 41.129863, -8.606131));
 		Vertex ovidio = g.addVertex2(new Location("Santo Ovidio", 41.115500, -8.606468));
 		//bus
-		Vertex forum_maia_b = g.addVertex2(new Location("Maia", 41.232805, -8.623769));
-		Vertex dragao_b = g.addVertex2(new Location("Estádio do Dragão", 41.158883, -8.582854));
-		Vertex gaia_b = g.addVertex2(new Location("Câmara de Gaia", 41.130332, -8.606570));
-		Vertex ermesinde_b = g.addVertex2(new Location("Ermesinde", 41.215894, -8.552604));
+		Vertex forum_maia_b = g.addVertex2(new Location("Fórum Maia BUS", 41.232805, -8.623769));
+		Vertex dragao_b = g.addVertex2(new Location("Estádio do Dragão BUS", 41.158883, -8.582854));
+		Vertex gaia_b = g.addVertex2(new Location("Câmara de Gaia BUS", 41.130332, -8.606570));
+		Vertex ermesinde_b = g.addVertex2(new Location("Ermesinde BUS", 41.215894, -8.552604));
 		//train
 		//to simplify, câmara de gaia and estádio do dragão metro stations replace general torres and campanha respectively
-		Vertex ermesinde_t = g.addVertex2(new Location("Ermesinde", 41.216927, -8.553934));
+		Vertex ermesinde_t = g.addVertex2(new Location("Ermesinde TRAIN", 41.216927, -8.553934));
 		
 		Edge.setWalkingByDefault(false);
 		//metro
@@ -166,9 +157,19 @@ public class Gui {
 		gaia_ermesinde.addTransportationTP(train, 15, 1.5);
 		gaia_dragao.addTransportationTP(train, 4, 1.2);
 		
-		options.setSource(gaia);
-		options.setDestination(forum_maia);
-		
+		options.setSource(ovidio);
+		options.setDestination(ermesinde_t);
+
+		//options.setChosen_heuristic(Heuristic.DISTANCE);
+		options.setChosen_heuristic(Heuristic.TIME);
+		//options.setChosen_heuristic(Heuristic.PRICE);
+		//options.setChosen_heuristic(Heuristic.SWAPS);
+		//options.setChosen_heuristic(Heuristic.WALK_DISTANCE);
+		//options.avoidTransportation(Transportation.TRAIN, true);
+		//options.avoidTransportation(Transportation.METRO, true);
+		//options.avoidTransportation(Transportation.BUS, true);
+		//options.setMax_price(0);
+
 		return g;
 	}
 	

@@ -14,7 +14,7 @@ public class A_Star {
 	// The set of nodes already evaluated
 	//private HashSet<State> closedset;´
 	// maybe I don't need entire states because I never want to go back to same vertex?
-	private HashSet<Vertex> closedset;
+	private HashSet<State> closedset;
 	
 	// The set of currently discovered nodes still to be evaluated.
     // Initially, only the start node is known.
@@ -28,7 +28,7 @@ public class A_Star {
 	 */
 	public A_Star(Graph graph) {
 		//closedset = new HashSet<State>();
-		closedset = new HashSet<Vertex>();
+		closedset = new HashSet<State>();
 		openset = new TreeSet<State>();
 		this.graph = graph;
 		mst = this.graph.getMST();
@@ -45,27 +45,39 @@ public class A_Star {
 			current = openset.pollFirst();
 			cVertex = current.currentVertex();
 			
-			/*System.out.println("analizing vertex "+cVertex.getInfo().getName()+" with cost g="+current.getG());
+			/*System.out.println("analizing vertex "+cVertex.getInfo().getName()+" with cost g="+current.getG()+" with cost h="+current.getH()+" with cost f="+(current.getG()+current.getH()));
 			System.out.print("openset: ");for( State s : this.openset) {
-				System.out.print(s.currentVertex().getInfo().getName()+"+ ");
+				if(s.getG()+s.getH() < 12) System.out.print(s.currentVertex().getInfo().getName()+"+"+(s.getG()+s.getH())+" - ");
 			}System.out.println();
-			System.out.print("closedset: ");for( Vertex v : this.closedset){
-				System.out.print(v.getInfo().getName()+"+ ");
+			System.out.print("closedset: ");for( State v : this.closedset){
+				System.out.print(v.currentVertex().getInfo().getName()+"+ ");
 			}System.out.println();
-			*/
+			/**/
 			if(cVertex.equals(options.getDestination()))
 				return current;
-			this.closedset.add(cVertex);
+			
+			this.closedset.add(current);
 			
 			for( Edge e : cVertex.getEdges()){
 				
-				if( closedset.contains(e.otherVertex(cVertex)))
+				//if( closedset.contains(e.otherVertex(cVertex)))
+				//	continue;
+				if( current.getPath().contains(e.otherVertex(cVertex)))
 					continue;
 				
 				for( Transportation t : e.getTransportations()) {
 					
-					double h = heuristic_evaluation(cVertex, options.getDestination());
+					double h = heuristic_evaluation(e.otherVertex(cVertex), options.getDestination());
 					State s = new State(current, e.otherVertex(cVertex), e, t, h);
+					
+					//check cicle
+					if(s.getG()==-1){
+						System.err.println("State had a cicle");
+						continue;
+					}
+					
+					if(closedset_contains(s))
+						continue;
 					
 					//System.out.println("<neighbor "+s.currentVertex().getInfo().getName()+" g="+s.getG()+ " h=" + s.getH()+" by "+t.toString()+">");
 					
@@ -96,8 +108,8 @@ public class A_Star {
 		System.err.print("openset: ");for( State s : this.openset) {
 			System.err.print(s.currentVertex().getInfo().getName()+" + ");
 		}System.err.println();
-		System.err.print("closedset: ");for( Vertex v : this.closedset){
-			System.err.print(v.getInfo().getName()+" + ");
+		System.err.print("closedset: ");for( State v : this.closedset){
+			System.err.print(v.currentVertex().getInfo().getName()+" + ");
 		}System.err.println();
 		return null;
 	}
@@ -174,6 +186,17 @@ public class A_Star {
 	 */
 	private boolean openset_contains(State s) {
 		for(State st : this.openset){
+			if(st.equals(s)) return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @description avoids using compareTo instead of equals
+	 */
+	private boolean closedset_contains(State s) {
+		for(State st : this.closedset){
 			if(st.equals(s)) return true;
 		}
 		return false;
