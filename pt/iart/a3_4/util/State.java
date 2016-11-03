@@ -119,13 +119,15 @@ public class State implements Comparable<State> {
 		//talvez funcione assim
 		//return this.lastVertex.equals(s.lastVertex);
 		if( this.lastVertex.equals(s.lastVertex)){
-			if(this.total_walked_distance != s.total_walked_distance) return false;
-			if(this.total_swaps != s.total_swaps) return false;
-			for( Transportation t : this.edgeTransport.values()){
-				if(!s.edgeTransport.containsValue(t)) return true;
+			if(options.getChosen_heuristic() == Heuristic.WALK_DISTANCE && this.total_walked_distance != s.total_walked_distance) return false;
+			if(options.getChosen_heuristic() == Heuristic.SWAPS) {
+				if(this.total_swaps != s.total_swaps) return false;
+				for( Transportation t : this.edgeTransport.values()){
+					if(!s.edgeTransport.containsValue(t)) return true;
+				}
+				return false;
 			}
-			//if(!this.edgeTransport.values().equals(s.edgeTransport.values())) return false;
-			return false;
+			return true;
 		}
 		return false;
 	}

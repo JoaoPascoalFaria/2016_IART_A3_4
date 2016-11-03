@@ -161,9 +161,9 @@ public class Gui {
 		options.setDestination(ermesinde_t);
 
 		//options.setChosen_heuristic(Heuristic.DISTANCE);
-		options.setChosen_heuristic(Heuristic.TIME);
+		//options.setChosen_heuristic(Heuristic.TIME);
 		//options.setChosen_heuristic(Heuristic.PRICE);
-		//options.setChosen_heuristic(Heuristic.SWAPS);
+		options.setChosen_heuristic(Heuristic.SWAPS);
 		//options.setChosen_heuristic(Heuristic.WALK_DISTANCE);
 		//options.avoidTransportation(Transportation.TRAIN, true);
 		//options.avoidTransportation(Transportation.METRO, true);
